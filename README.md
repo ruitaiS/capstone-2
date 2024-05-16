@@ -1,8 +1,8 @@
 # Vehicle Insurance Claims Prediction:
 
 * 0 points: The report is either not uploaded or contains very minimal information AND/OR the report is not written in English AND/OR the report appears to violate the terms of the edX Honor Code.
-<br>
-5 points: One or more required sections of the report are missing.
+
+* 5 points: One or more required sections of the report are missing.
 <br>
 10 points: The report includes all required sections, but the report is significantly difficult to follow or missing significant supporting detail in multiple sections.
 <br>
