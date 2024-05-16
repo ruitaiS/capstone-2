@@ -1,13 +1,4 @@
-Vehicle Insurance Dataset:
-https://www.kaggle.com/datasets/imtkaggleteam/vehicle-insurance-data
-
-Vehicle Insurance Project:
-
-An introduction/overview/executive summary section that describes the dataset and variables, and summarizes the goal of the project and key steps that were performed.
-A methods/analysis section that explains the process and techniques used, including data cleaning, data exploration and visualization, any insights gained, and your modeling approach. At least two different models or algorithms must be used, with at least one being more advanced than linear or logistic regression for prediction problems.
-A results section that presents the modeling results and discusses the model performance.
-A conclusion section that gives a brief summary of the report, its potential impact, its limitations, and future work.
-A references section that lists sources for datasets and/or other resources used, if applicable.
+# Vehicle Insurance Claims Prediction:
 
 0 points: The report is either not uploaded or contains very minimal information AND/OR the report is not written in English AND/OR the report appears to violate the terms of the edX Honor Code.
 5 points: One or more required sections of the report are missing.
@@ -17,12 +8,20 @@ A references section that lists sources for datasets and/or other resources used
 20 points: The report includes all required sections and is easy to follow, but with minor flaws in one section.
 25 points: The report includes all required sections, is easy to follow with good supporting detail throughout, and is insightful and innovative.
 
-Introduction:
+## Introduction:
+An introduction/overview/executive summary section that describes the dataset and variables, and summarizes the goal of the project and key steps that were performed.
 
-Methods / Analysis:
+## Methods / Analysis:
+A methods/analysis section that explains the process and techniques used, including data cleaning, data exploration and visualization, any insights gained, and your modeling approach. At least two different models or algorithms must be used, with at least one being more advanced than linear or logistic regression for prediction problems.
 
-Results:
+## Results:
+A results section that presents the modeling results and discusses the model performance.
 
-Conclusion:
+## Conclusion:
+A conclusion section that gives a brief summary of the report, its potential impact, its limitations, and future work.
 
-References:
+## References:
+A references section that lists sources for datasets and/or other resources used, if applicable.
+
+Vehicle Insurance Dataset:
+https://www.kaggle.com/datasets/imtkaggleteam/vehicle-insurance-data
