@@ -24,14 +24,15 @@ if(!(file.exists(data_file_1) & file.exists(data_file_2))){
 ###################################################
 
 data <- rbind(read.csv(data_file_1), read.csv(data_file_2))
+names(data) <- tolower(names(data))
 
 # Final hold-out test set will be 10% of data
 # TODO: Probably a more elegant way to partition this into 3 parts
 set.seed(1, sample.kind="Rounding") # if using R 3.6 or later
 # set.seed(1) # if using R 3.5 or earlier
-holdout_index <- createDataPartition(y = data$SEX, times = 1, p = 0.1, list = FALSE)
+holdout_index <- createDataPartition(y = data$sex, times = 1, p = 0.1, list = FALSE)
 holdout_df <- data[holdout_index,]
-test_index <- createDataPartition(y = data[-holdout_index,]$SEX, times = 1, p = 0.2, list = FALSE)
+test_index <- createDataPartition(y = data[-holdout_index,]$sex, times = 1, p = 0.2, list = FALSE)
 train_df <- data[-test_index,]
 test_df <- data[test_index,]
 
