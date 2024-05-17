@@ -2,18 +2,18 @@
 
 #--------
 
-# Number of seats
+# Number of seats (sports cars = more liability?)
 
-# Year without accident
+# Years without accident (safer drivers = lower payout?)
 
-# Type of vehicle (commercial vs. personal vs. whatever)
+# Type of vehicle (commercial drivers better?)
 
-# Tonnage
+# Tonnage (heavy = driven by pros, thus safer? or will they cause more damage?)
 
-# Age of vehicle
+# Age of vehicle (older = more problems?)
 
-# Age of policy
+# Age of policy (longer = better?)
 
-# Insured value
+# Insured value (more expensive = more careful drivers? or more claims paid?)
 
 # Consider looking at how they do this irl

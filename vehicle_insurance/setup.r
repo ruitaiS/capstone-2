@@ -25,6 +25,7 @@ if(!(file.exists(data_file_1) & file.exists(data_file_2))){
 
 data <- rbind(read.csv(data_file_1), read.csv(data_file_2))
 names(data) <- tolower(names(data))
+# TODO: Date formatting for insr_begin, insr_end
 
 # Final hold-out test set will be 10% of data
 # TODO: Probably a more elegant way to partition this into 3 parts
