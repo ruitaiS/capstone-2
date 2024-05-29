@@ -4,6 +4,7 @@
 
 library(tidyverse)
 library(caret)
+library(dplyr)
 options(timeout = 120)
 
 # Set working directory to the directory containing this script
@@ -25,7 +26,18 @@ if(!(file.exists(data_file_1) & file.exists(data_file_2))){
 
 data <- rbind(read.csv(data_file_1), read.csv(data_file_2))
 names(data) <- tolower(names(data))
-# TODO: Date formatting for insr_begin, insr_end
+
+# Preprocessing
+
+# Date formatting:
+data <- data %>%
+  mutate(
+    start_date = as.Date(insr_begin, format = "%d-%b-%y"),
+    end_date = as.Date(insr_end, format = "%d-%b-%y")
+  )
+data <- subset(data, select = -c(insr_begin, insr_end))
+
+# Boolean for continuous or non-continous coverage
 
 # Final hold-out test set will be 10% of data
 # TODO: Probably a more elegant way to partition this into 3 parts

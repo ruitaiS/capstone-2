@@ -1,13 +1,13 @@
-lm_model <- lm(claim_paid ~ ., data = train_df)
+#lm_model <- lm(claim_paid ~ ., data = train_df)
 
-predictions <- predict(lm_model, newdata = test_df)
-mae <- mean(abs(predictions - test_df$claim_paid))
-mse <- mean((predictions - test_df$claim_paid)^2)
-rmse <- sqrt(mse)
+#predictions <- predict(lm_model, newdata = test_df)
+#mae <- mean(abs(predictions - test_df$claim_paid))
+#mse <- mean((predictions - test_df$claim_paid)^2)
+#rmse <- sqrt(mse)
 
-cat("Mean Absolute Error (MAE):", mae, "\n")
-cat("Mean Squared Error (MSE):", mse, "\n")
-cat("Root Mean Squared Error (RMSE):", rmse, "\n")
+#cat("Mean Absolute Error (MAE):", mae, "\n")
+#cat("Mean Squared Error (MSE):", mse, "\n")
+#cat("Root Mean Squared Error (RMSE):", rmse, "\n")
 
 # First find the biasing effects of each of these categorical variables:
 # sex

@@ -1,3 +1,4 @@
 datasets/vehicle_insurance_data/*
 !datasets/vehicle_insurance_data/.gitkeep
 .Rhistory
+*.RData
