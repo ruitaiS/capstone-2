@@ -42,5 +42,5 @@ gaps <- df %>%
   ) %>%
   filter(end_date_diff > 1)
 
-# Print the subscriptions with gaps
-print(gaps)
+# Simplest approach would be to say if the policy has ever been discontinued
+# More sophisticated, you could look at how much of the previous has it been so
