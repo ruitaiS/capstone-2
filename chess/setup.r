@@ -30,14 +30,20 @@ if(!(file.exists(data_file))){
 
 data <- read.csv(data_file)
 names(data) <- tolower(names(data))
+rm(data_file)
 
 # Only Definitive Wins
 data <- filter(data, winner != "draw")
+
+# Encode winner column
 data$winner <- ifelse(data$winner == "black", 0, 1)
 
 # Only Rated games
 data$rated <- tolower(data$rated)
 data <- filter(data, rated == 'true')
+
+# Remove Unnecessary Columns
+data <- select(data, subset = -c(id, rated, created_at, last_move_at, increment_code))
 
 # Ignore Ratings Information
 #data <- select(data, subset = -c(white_rating, black_rating, rated))
@@ -45,8 +51,6 @@ data <- filter(data, rated == 'true')
 # Only Players who have played both sides
 #common_ids <- intersect(unique(data$white_id), unique(data$black_id))
 #data <- data[data$white_id %in% common_ids & data$black_id %in% common_ids, ]
-# Preprocessing
-
 
 ###################################################
 # Create main and final_holdout_test sets 
@@ -59,8 +63,12 @@ set.seed(1, sample.kind="Rounding") # if using R 3.6 or later
 holdout_index <- createDataPartition(y = data$winner, times = 1, p = 0.1, list = FALSE)
 
 # Make sure we have match data for the color they're playing as
-# Runs for main / holdout split, and also for each fold
+# Used for main / holdout split, and also for each fold
 validate <- function(test, train){
+  # Note it makes the test set much smaller
+  # Can be improved by checking if test set has more than one row as that color,
+  # and moving some proportion over to the train set (as opposed to all)
+  
   updated_test <- test %>% 
     semi_join(train, by = "white_id") %>%
     semi_join(train, by = "black_id")
@@ -71,19 +79,21 @@ validate <- function(test, train){
 results <- validate(data[holdout_index, ], data[-holdout_index,])
 final_holdout_test <- results[[1]]
 main_df <- results[[2]]
-rm(results, holdout_index)
+rm(results, holdout_index, data)
 
+# K-fold Cross Validation; k = 5
 folds <- createFolds(main_df$winner, k = 5, list = TRUE, returnTrain = FALSE)
-generate_splits <- function(index, data=main_df, folds = folds){
-  return (data[folds[[index]],])
+generate_splits <- function(index){
+  return (validate(main_df[folds[[index]],], main_df[-folds[[index]],]))
   #return (list(data[folds[[index]],],
   #                 data[-folds[[index]],]))
 }
 
-data[folds[[1]],]
+# Split Along Fold (Pick New Index Each Run)
 splits <- generate_splits(index=1)
 test_df <- splits[[1]]
 train_df <- splits[[2]]
+rm(splits)
 
 #########################################################
 
@@ -92,7 +102,7 @@ results_df <- data.frame(Algorithm = character(),
                       Accuracy = numeric(),
                       stringsAsFactors = FALSE)
 
-# RMSE Calculation Function:
+# Accuracy Calculation Function:
 calculate_accuracy <- function(predicted_outcomes, actual_outcomes) {
   return(mean(predicted_outcomes == actual_outcomes))
 }
