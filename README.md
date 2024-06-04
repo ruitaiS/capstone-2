@@ -20,6 +20,9 @@ An introduction/overview/executive summary section that describes the dataset an
 ## Methods / Analysis:
 A methods/analysis section that explains the process and techniques used, including data cleaning, data exploration and visualization, any insights gained, and your modeling approach. At least two different models or algorithms must be used, with at least one being more advanced than linear or logistic regression for prediction problems.
 
+<img src="/vehicle_insurance/graphs/data_legend.png" align="center" alt="Data Legend"
+	title="Data Legend"/>
+
 ## Results:
 A results section that presents the modeling results and discusses the model performance.
 
