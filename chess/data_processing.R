@@ -1,26 +1,28 @@
-#> length(unique(train_df$opening_name))
+# Players created from main_df (ctrl f replace to switch it)
 
-#> length(unique(train_df$opening_eco))
+#> length(unique(main_df$opening_name))
+
+#> length(unique(main_df$opening_eco))
 
 # Unique Players Dataframe:
-players <- data.frame(player_id = unique(c(train_df$white_id, train_df$black_id)))
+players <- data.frame(player_id = unique(c(main_df$white_id, main_df$black_id)))
 
 # Player's Game Statistics
-white_wins <- train_df %>%
+white_wins <- main_df %>%
 filter(winner == 1) %>%
 group_by(white_id) %>%
 summarise(white_wins = n())
 
-white_games <- train_df %>%
+white_games <- main_df %>%
   group_by(white_id) %>%
   summarise(white_games = n())
 
-black_wins <- train_df %>%
+black_wins <- main_df %>%
   filter(winner == 1) %>%
   group_by(black_id) %>%
   summarise(black_wins = n())
 
-black_games <- train_df %>%
+black_games <- main_df %>%
   group_by(black_id) %>%
   summarise(black_games = n())
 
