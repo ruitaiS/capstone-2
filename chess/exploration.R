@@ -58,3 +58,5 @@ plot2 <- ggplot(plot_df, aes(x = overall_wr.x, y = overall_wr.y, color = factor(
 store_plot("white_vs_black_WR.png", plot, h = 6, w=6)
 store_plot("white_vs_black_overall_WR.png", plot2, h = 6, w=6)
 rm(plot, plot2)
+
+# 
