@@ -1,1 +1,0 @@
-mu <- mean(train_df$claim_paid, na.rm = TRUE)
