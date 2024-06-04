@@ -32,6 +32,5 @@ A conclusion section that gives a brief summary of the report, its potential imp
 ## References:
 A references section that lists sources for datasets and/or other resources used, if applicable.
 
-Vehicle Insurance Dataset:
-https://www.kaggle.com/datasets/imtkaggleteam/vehicle-insurance-data
-https://arxiv.org/abs/2302.10612 - Tree-Based Machine Learning Methods For Vehicle Insurance Claims Size Prediction
+* https://www.kaggle.com/datasets/imtkaggleteam/vehicle-insurance-data - Vehicle Insurance Dataset
+* https://arxiv.org/abs/2302.10612 - Tree-Based Machine Learning Methods For Vehicle Insurance Claims Size Prediction
