@@ -2,9 +2,19 @@
 # Initial Setup
 ###############
 
+if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+if(!require(caret)) install.packages("caret", repos = "http://cran.us.r-project.org")
+if(!require(ggplot2)) install.packages("ggplot2", repos = "http://cran.us.r-project.org")
+if(!require(tidyr)) install.packages("tidyr", repos = "http://cran.us.r-project.org")
+if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
+if(!require(lubridate)) install.packages("lubridate", repos = "http://cran.us.r-project.org")
+
 library(tidyverse)
 library(caret)
+library(ggplot2)
+library(tidyr)
 library(dplyr)
+library(lubridate)
 options(timeout = 120)
 
 # Set working directory to the directory containing this script
@@ -32,13 +42,23 @@ names(data) <- tolower(names(data))
 # Date formatting:
 data <- data %>%
   mutate(
-    start_date = as.Date(insr_begin, format = "%d-%b-%y"),
-    end_date = as.Date(insr_end, format = "%d-%b-%y")
+    insr_begin = as.Date(insr_begin, format = "%d-%b-%y"),
+    insr_end = as.Date(insr_end, format = "%d-%b-%y")
   )
-data <- subset(data, select = -c(insr_begin, insr_end))
 
 # Boolean for continuous or non-continous coverage
+# Check for gaps
+# This takes quite some time (15-20 mins)
+gaps <- data %>%
+  group_by(object_id) %>%
+  arrange(object_id, insr_begin) %>%
+  mutate(
+    next_begin_date = lead(insr_begin),
+    end_date_diff = next_begin_date - insr_end
+  ) %>%
+  filter(end_date_diff > 1)
 
+# Split data -----------------------------------------------------------------------------
 # Final hold-out test set will be 10% of data
 # TODO: Probably a more elegant way to partition this into 3 parts
 set.seed(1, sample.kind="Rounding") # if using R 3.6 or later
@@ -53,13 +73,27 @@ rm(data, holdout_index, test_index, data_file_1, data_file_2)
 
 #########################################################
 
-#RMSE Calculation Function:
-calculate_rmse <- function(predicted_paid, actual_paid) {
-  differences <- predicted_paid - actual_paid
-  squared_differences <- differences^2
-  mean_squared_difference <- mean(squared_differences)
-  rmse <- sqrt(mean_squared_difference)
+# DF for Storing RMSE Results:
+rmse_df <- data.frame(Algorithm = character(),
+                      RMSE = numeric(),
+                      stringsAsFactors = FALSE)
+
+# RMSE Calculation Function:
+calculate_rmse <- function(predicted_ratings, actual_ratings) {
+  errors <- predicted_ratings - actual_ratings
+  squared_errors <- errors^2
+  mean_of_squared_errors <- mean(squared_errors)
+  rmse <- sqrt(mean_of_squared_errors)
   return(rmse)
+}
+
+store_plot<- function(filename, plot, h = 6, w = 12) {
+  res <- 300
+  height <- h * res
+  width <- w * res
+  png(file = paste("graphs/", filename, sep = ""), height = height, width = width, res = res)
+  print(plot)
+  dev.off()
 }
 
 
