@@ -56,17 +56,38 @@ data <- filter(data, rated == 'true')
 # TODO: Probably a more elegant way to partition this into 3 parts
 set.seed(1, sample.kind="Rounding") # if using R 3.6 or later
 # set.seed(1) # if using R 3.5 or earlier
-holdout_index <- createDataPartition(y = data$sex, times = 1, p = 0.1, list = FALSE)
-holdout_df <- data[holdout_index,]
-test_index <- createDataPartition(y = data[-holdout_index,]$sex, times = 1, p = 0.2, list = FALSE)
-train_df <- data[-test_index,]
-test_df <- data[test_index,]
+holdout_index <- createDataPartition(y = data$winner, times = 1, p = 0.1, list = FALSE)
 
-rm(data, holdout_index, test_index, data_file_1, data_file_2)
+# Make sure we have match data for the color they're playing as
+# Runs for main / holdout split, and also for each fold
+validate <- function(test, train){
+  updated_test <- test %>% 
+    semi_join(train, by = "white_id") %>%
+    semi_join(train, by = "black_id")
+  updated_train <- rbind(train, anti_join(test, updated_test))
+  return (list(updated_test, updated_train))
+}
+
+results <- validate(data[holdout_index, ], data[-holdout_index,])
+final_holdout_test <- results[[1]]
+main_df <- results[[2]]
+rm(results, holdout_index)
+
+folds <- createFolds(main_df$winner, k = 5, list = TRUE, returnTrain = FALSE)
+generate_splits <- function(index, data=main_df, folds = folds){
+  return (data[folds[[index]],])
+  #return (list(data[folds[[index]],],
+  #                 data[-folds[[index]],]))
+}
+
+data[folds[[1]],]
+splits <- generate_splits(index=1)
+test_df <- splits[[1]]
+train_df <- splits[[2]]
 
 #########################################################
 
-# DF for Storing RMSE Results:
+# Storing Results:
 results_df <- data.frame(Algorithm = character(),
                       Accuracy = numeric(),
                       stringsAsFactors = FALSE)

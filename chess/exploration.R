@@ -8,7 +8,7 @@ plot <- ggplot(data, aes(x = white_rating, y = black_rating, color = factor(winn
        color = "Winner") +
   theme_minimal()+
   theme(
-    text = element_text(size = unit(2, "mm")),          # General text size
+    text = element_text(size = unit(10, "mm")),          # General text size
     plot.title = element_text(size = unit(20, "mm")),    # Title text size
     axis.title = element_text(size = unit(15, "mm")),    # Axis titles text size
     axis.text = element_text(size = unit(10, "mm"))      # Axis text size
