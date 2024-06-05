@@ -40,7 +40,7 @@ plot_df7 <- plot_df[301:350,]
 
 plot <- ggplot(plot_df1,aes(x=opening_eco, y = value,fill= Winner)) + 
   geom_col(position="dodge") + 
-  #scale_fill_manual(values = c("white_wins" = "white", "black_wins" = "black")) +
+  scale_fill_manual(values = c("white_wins" = "lightgray", "black_wins" = "black")) +
   scale_y_continuous(sec.axis = sec_axis(~ . , name = "White Wins"))+
   labs(y="Black Wins") +
   theme_minimal()+
@@ -51,3 +51,5 @@ plot <- ggplot(plot_df1,aes(x=opening_eco, y = value,fill= Winner)) +
     axis.title = element_text(size = unit(15, "mm")),    # Axis titles text size
     axis.text = element_text(size = unit(10, "mm"))      # Axis text size
   )
+
+store_plot("wins_by_opener_top_25.png", plot)
