@@ -6,11 +6,28 @@ An introduction/overview/executive summary section that describes the dataset an
 ## Methods / Analysis:
 A methods/analysis section that explains the process and techniques used, including data cleaning, data exploration and visualization, any insights gained, and your modeling approach. At least two different models or algorithms must be used, with at least one being more advanced than linear or logistic regression for prediction problems.
 
-<img src="/chess/graphs/openers_count_density.png" align="center" alt="Density Plot of Instances of Each Opener"
-	title="Density Plot of Instances of Each Opener"/>
+The first thing I did was to compare the game outcomes with the player ratings. Lichess uses the Glicko 2 rating system, which starts players off with a rating of 1500, adjusting it as the players play more games and accumulate more wins and losses. Since it is a numerical representation of a player's skill level, it is, as one might expect, a very reliable predictor of the outcome of a match.
 
 <img src="/chess/graphs/white_vs_black_ratings.png" align="center" alt="White vs. Black Rating"
 	title="White vs. Black Rating"/>
+
+ * TODO: regression line / boundary line
+
+
+ 
+
+ I also plotted white vs. black according to their overall win rates, as well as the win rates for the side they were playing as. These plots are much more sparse because I had to restrict the datasets to players who had at least 5 games on each side - otherwise they got extremely noisy with many players clustered along the edges of the plot. Maybe because of this restriction, I didn't find these plots to be very informative:
+<div align="center">
+<img src="/chess/graphs/white_vs_black_WR.png" align="center" alt="Outcome by Win Rate Per Side"
+	title="Outcome by Win Rate Per Side"/>
+	<img src="/chess/graphs/white_vs_black_overall_WR.png" align="center" alt="Outcome by Average Win Rate"
+	title="Outcome by Average Win Rate"/>
+</div>
+
+Next I wanted to check the effect of various opening plays on the final outcome of a match. Looking at the density plot, some openers are much more frequently used than others, and I wanted to know whether it was because they were more consistently successful in securing a win.
+
+<img src="/chess/graphs/openers_count_density.png" align="center" alt="Density Plot of Instances of Each Opener"
+	title="Density Plot of Instances of Each Opener"/>
 
 Common Opening ECO Codes:
 ```
@@ -48,20 +65,34 @@ The high proportion of beginner players makes the machine learning task a little
 <img src="/chess/graphs/wins_by_opener_top_25.png" align="center" alt="Win Comparison of the Top 25 Most Played Openers"
 	title="Win Comparison of the Top 25 Most Played Openers"/>
 
-It's interesting to note that A00, the collection of unconventional opening moves by white, has a very high win rate for black. In constrast, white is generally favored to win in chess because of the [first move advantage](https://en.wikipedia.org/wiki/First-move_advantage_in_chess), and our dataset shows this:
+It's interesting to note that A00, the collection of unconventional opening moves by white, has a very high win rate for black. White is generally favored to win in chess because of the [first move advantage](https://en.wikipedia.org/wiki/First-move_advantage_in_chess), and our dataset shows this:
 
 ```
 > mean(main_df$winner)
 [1] 0.5220334
 ```
 
-I had initially approached this question from the perspective of finding the most advantageous opening moves used by experienced players as a way to predict wins, but it's clear that irregular opening moves used by novice players are just as powerful, if not more powerful, predictors of losses.
+This got me thinking. I had initially approached this question from the perspective of finding the most advantageous opening moves used by experienced players as a way to predict wins, but the data seems to suggest that irregular opening moves used by novice players are just as powerful, if not more powerful, predictors of losses.
 
+<div style="text-align:center;">
 <img src="/chess/graphs/C41.png" align="center" alt="C41 - Philidor Defense" title="C41 - Philidor Defense"/>
+</div>
 
-Interestingly, [C41](https://en.wikipedia.org/wiki/Philidor_Defence), which has a very high win rate for white, is actually considered a good defensive move for black.
+Interestingly, [C41](https://en.wikipedia.org/wiki/Philidor_Defence), which has a very high win rate for white in our dataset, is actually considered a good defensive move for black.
 
 > Today, the Philidor is known as a solid but passive choice for Black, and is seldom seen in top-level play except as an alternative to the heavily analysed openings that can ensue after the normal 2...Nc6. It is considered a good opening for amateur players who seek a defensive strategy that is simpler and easier to understand
+
+Maybe this is because it is favored by newer players who might have just only begun to memorize some set openings, and who have yet to develop a very sophisticated playbook, but I can really only speculate; I don't personally know enough to say.
+
+Finally I looked at the number of moves taken during the match. I didn't expect for this to be a good predictor of game outcome, but I was intereseted to know whether more moves would increase the likelihood of certain win conditions (eg. resignaions), or whether the player's ranking would be predictive of the length of a match. The charts are shown below:
+
+* Moves vs. victory status
+* average player ranking vs. number of moves
+* 
+
+### Simple Algorithms
+
+Like with the movielens project, I started out with some very basic prediction methods. 
 
 ## Results:
 A results section that presents the modeling results and discusses the model performance.
