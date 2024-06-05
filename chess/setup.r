@@ -67,7 +67,7 @@ holdout_index <- createDataPartition(y = data$winner, times = 1, p = 0.1, list =
 
 # Make sure we have match data for the color they're playing as
 # Used for main / holdout split, and also for each fold
-validate <- function(test, train){
+consistency_check <- function(test, train){
   # Note it makes the test set much smaller
   # Can be improved by checking if test set has more than one row as that color,
   # and moving some proportion over to the train set (as opposed to all)
@@ -79,7 +79,7 @@ validate <- function(test, train){
   return (list(updated_test, updated_train))
 }
 
-results <- validate(data[holdout_index, ], data[-holdout_index,])
+results <- consistency_check(data[holdout_index, ], data[-holdout_index,])
 final_holdout_test <- results[[1]]
 main_df <- results[[2]]
 rm(results, holdout_index, data)
@@ -87,7 +87,7 @@ rm(results, holdout_index, data)
 # K-fold Cross Validation; k = 5
 folds <- createFolds(main_df$winner, k = 5, list = TRUE, returnTrain = FALSE)
 generate_splits <- function(index){
-  return (validate(main_df[folds[[index]],], main_df[-folds[[index]],]))
+  return (consistency_check(main_df[folds[[index]],], main_df[-folds[[index]],]))
   #return (list(data[folds[[index]],],
   #                 data[-folds[[index]],]))
 }
