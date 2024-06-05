@@ -48,6 +48,15 @@ The high proportion of beginner players makes the machine learning task a little
 <img src="/chess/graphs/wins_by_opener_top_25.png" align="center" alt="Win Comparison of the Top 25 Most Played Openers"
 	title="Win Comparison of the Top 25 Most Played Openers"/>
 
+It's interesting to note that A00, the collection of unconventional opening moves by white, has a very high win rate for black. In constrast, white is generally favored to win in chess because of the [first move advantage](https://en.wikipedia.org/wiki/First-move_advantage_in_chess), and our dataset shows this:
+
+```
+> mean(main_df$winner)
+[1] 0.5220334
+```
+
+I had initially approached this question from the perspective of finding the most advantageous opening moves used by experienced players as a way to predict wins, but it's clear that irregular opening moves used by novice players are just as powerful, if not more powerful, predictors of losses.
+
 ## Results:
 A results section that presents the modeling results and discusses the model performance.
 
