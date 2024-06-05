@@ -57,8 +57,7 @@ It's interesting to note that A00, the collection of unconventional opening move
 
 I had initially approached this question from the perspective of finding the most advantageous opening moves used by experienced players as a way to predict wins, but it's clear that irregular opening moves used by novice players are just as powerful, if not more powerful, predictors of losses.
 
-<img src="/chess/graphs/C41.png" align="center" alt="C41 - Philidor Defense"
-	title="C41 - Philidor Defense"/>
+<img src="/chess/graphs/C41.png" align="center" alt="C41 - Philidor Defense" title="C41 - Philidor Defense"/>
 
 Interestingly, [C41](https://en.wikipedia.org/wiki/Philidor_Defence), which has a very high win rate for white, is actually considered a good defensive move for black.
 
