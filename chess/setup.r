@@ -45,6 +45,9 @@ data <- filter(data, rated == 'true')
 # Remove Unnecessary Columns
 data <- select(data, subset = -c(id, rated, created_at, last_move_at, increment_code))
 
+# Set Factor Variables (TODO)
+#data$winner <- as.factor(data$winner)
+
 # Ignore Ratings Information
 #data <- select(data, subset = -c(white_rating, black_rating, rated))
 

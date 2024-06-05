@@ -13,8 +13,8 @@ opener_count <- main_df %>%
 openers <- merge(opener_wr, opener_count, by = "opening_eco", all.x = TRUE) %>%
   merge(opener_wins, by = "opening_eco", all.x = TRUE)
 openers$black_wins <- openers$count - openers$white_wins
-openers$opening_eco <- factor(openers$opening_eco, levels = unique(openers$opening_eco))
 openers <- openers[order(openers$count, decreasing = TRUE), ]
+openers$opening_eco <- factor(openers$opening_eco, levels = unique(openers$opening_eco)) # Needs set after sums
 rm(opener_wr, opener_count, opener_wins)
 
 # Most Common Openers
@@ -26,7 +26,7 @@ density_values <- density(openers$count)
 plot <- {plot(density_values, main = "Density Plot of Instances of Each Opener", xlab = "Count", ylab = "Density")
   polygon(density_values, col = "lightblue", border = "black")
 }
-store_plot("openers_count_density.png", plot)
+#store_plot("openers_count_density.png", plot)
 
 # Bar Plot of Opener Winners
 plot_df <- openers[, c("opening_eco", "white_wins", "black_wins")] %>% pivot_longer(cols = -opening_eco,names_to = "Winner")
@@ -52,4 +52,4 @@ plot <- ggplot(plot_df1,aes(x=opening_eco, y = value,fill= Winner)) +
     axis.text = element_text(size = unit(10, "mm"))      # Axis text size
   )
 
-store_plot("wins_by_opener_top_25.png", plot)
+#store_plot("wins_by_opener_top_25.png", plot)

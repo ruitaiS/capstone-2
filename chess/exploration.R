@@ -17,6 +17,25 @@ plot <- ggplot(main_df, aes(x = white_rating, y = black_rating, color = factor(w
 store_plot("white_vs_black_ratings.png", plot, h = 6, w=6)
 rm(plot)
 
+# White vs. Black Rating
+plot <- ggplot(main_df, aes(x = white_rating - black_rating, y = winner, color = factor(winner))) +
+  geom_point() +
+  scale_color_manual(values = c("red", "blue"), labels = c("Black Wins", "White Wins")) +
+  labs(title = "White - Black Rating Difference",
+       x = "Difference",
+       y = "Winner (0 = Black; 1 = White)",
+       color = "Winner") +
+  theme_minimal()+
+  theme(
+    text = element_text(size = unit(10, "mm")),          # General text size
+    plot.title = element_text(size = unit(20, "mm")),    # Title text size
+    axis.title = element_text(size = unit(15, "mm")),    # Axis titles text size
+    axis.text = element_text(size = unit(10, "mm"))      # Axis text size
+  )
+
+store_plot("white_vs_black_rating_diffs.png", plot, h = 6, w=6)
+rm(plot)
+
 # Win Percentage
 # For these, filtered out games where white or black had fewer than 5 games as that color
 plot_df <- merge(main_df, players[, c("white_wr", "overall_wr", "white_games", "player_id")],
