@@ -1,4 +1,4 @@
-# Vehicle Insurance Claims Prediction:
+# Chess Game Outcome Prediction:
 
 ## Introduction:
 An introduction/overview/executive summary section that describes the dataset and variables, and summarizes the goal of the project and key steps that were performed.
@@ -6,8 +6,47 @@ An introduction/overview/executive summary section that describes the dataset an
 ## Methods / Analysis:
 A methods/analysis section that explains the process and techniques used, including data cleaning, data exploration and visualization, any insights gained, and your modeling approach. At least two different models or algorithms must be used, with at least one being more advanced than linear or logistic regression for prediction problems.
 
-<img src="/vehicle_insurance/graphs/data_legend.png" align="center" alt="Data Legend"
-	title="Data Legend"/>
+<img src="/chess/graphs/openers_count_density.png" align="center" alt="Density Plot of Instances of Each Opener"
+	title="Density Plot of Instances of Each Opener"/>
+
+<img src="/chess/graphs/white_vs_black_ratings.png" align="center" alt="White vs. Black Rating"
+	title="White vs. Black Rating"/>
+
+Common Opening ECO Codes:
+```
+opening_eco opener_wr count
+         A00 0.4107383   745
+         C00 0.5281065   676
+         D00 0.4874101   556
+         B01 0.5174312   545
+         C41 0.5928705   533
+         C20 0.4842520   508
+```
+
+I was curious what these openers were that seemed so popular, so I did some research.
+
+From [Wikipedia](https://en.wikipedia.org/wiki/Irregular_chess_opening#Unusual_first_moves_by_White):
+> The vast majority of high-level chess games begin with either 1.e4, 1.d4, 1.Nf3, or 1.c4. Also seen occasionally are 1.g3, 1.b3, and 1.f4. Other opening moves by White, along with a few non-transposing lines beginning 1.g3, are classified under the code "A00" by the Encyclopaedia of Chess Openings and described as "uncommon" or "irregular". Although they are classified under a single code, these openings are unrelated to each other.
+
+From Chess Opening Theory - ECO Volumes [A](https://en.wikibooks.org/wiki/Chess_Opening_Theory/ECO_volume_A) [C](https://en.wikibooks.org/wiki/Chess_Opening_Theory/ECO_volume_C) and [D](https://en.wikibooks.org/wiki/Chess_Opening_Theory/ECO_volume_D) :
+> A00: Uncommon Openings
+
+> C00: French Defence, unusual White second moves
+
+> D00: 1.d4 d5 unusual lines
+
+It turns out these are actually collections of unrelated, "unsuual" opening sequences. This reflects the fact that our dataset is from a free online chess service, and most players are beginners rather than grandmasters, with over 75% of them having played 2 games or fewer.
+
+```
+> summary(players$total_games)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   1.000   1.000   2.362   2.000  82.000 
+```
+
+The high proportion of beginner players makes the machine learning task a little tricker - it seemed to me that the outcome of these games would be much more chaotic than games between experienced players, who might have a more reasoned approach, and I wondered if the opening moves held any predictive power at all, given that they were more likely than not chosen at random.
+
+<img src="/chess/graphs/wins_by_opener_top_25.png" align="center" alt="Win Comparison of the Top 25 Most Played Openers"
+	title="Win Comparison of the Top 25 Most Played Openers"/>
 
 ## Results:
 A results section that presents the modeling results and discusses the model performance.
