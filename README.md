@@ -35,7 +35,7 @@ From Chess Opening Theory - ECO Volumes [A](https://en.wikibooks.org/wiki/Chess_
 
 > D00: 1.d4 d5 unusual lines
 
-It turns out these are actually collections of unrelated, "unsuual" opening sequences. This reflects the fact that our dataset is from a free online chess service, and most players are beginners rather than grandmasters, with over 75% of them having played 2 games or fewer.
+It turns out these are actually collections of unrelated, "unsuual" opening sequences. This reflects the fact that our dataset is from a free online chess service, and most players are beginners, with over 75% of them having played 2 games or fewer recorded on the service.
 
 ```
 > summary(players$total_games)
@@ -47,6 +47,15 @@ The high proportion of beginner players makes the machine learning task a little
 
 <img src="/chess/graphs/wins_by_opener_top_25.png" align="center" alt="Win Comparison of the Top 25 Most Played Openers"
 	title="Win Comparison of the Top 25 Most Played Openers"/>
+
+It's interesting to note that A00, the collection of unconventional opening moves by white, has a very high win rate for black. In constrast, white is generally favored to win in chess because of the [first move advantage](https://en.wikipedia.org/wiki/First-move_advantage_in_chess), and our dataset shows this:
+
+```
+> mean(main_df$winner)
+[1] 0.5220334
+```
+
+I had initially approached this question from the perspective of finding the most advantageous opening moves used by experienced players as a way to predict wins, but it's clear that irregular opening moves used by novice players are just as powerful, if not more powerful, predictors of losses.
 
 ## Results:
 A results section that presents the modeling results and discusses the model performance.
