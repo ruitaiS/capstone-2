@@ -35,7 +35,7 @@ From Chess Opening Theory - ECO Volumes [A](https://en.wikibooks.org/wiki/Chess_
 
 > D00: 1.d4 d5 unusual lines
 
-It turns out these are actually collections of unrelated, "unsuual" opening sequences. This reflects the fact that our dataset is from a free online chess service, and most players are beginners rather than grandmasters, with over 75% of them having played 2 games or fewer.
+It turns out these are actually collections of unrelated, "unsuual" opening sequences. This reflects the fact that our dataset is from a free online chess service, and most players are beginners, with over 75% of them having played 2 games or fewer recorded on the service.
 
 ```
 > summary(players$total_games)
