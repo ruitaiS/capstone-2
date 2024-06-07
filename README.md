@@ -11,7 +11,33 @@ The first thing I did was to compare the game outcomes with the player ratings. 
 <img src="/chess/graphs/white_vs_black_ratings.png" align="center" alt="White vs. Black Rating"
 	title="White vs. Black Rating"/>
 
- * TODO: regression line / boundary line
+ <img src="/chess/graphs/wr_by_rating_diff_filtered_regline.png" align="center" alt="Rating Difference Vs. Win Rate"
+	title="Rating Difference Vs. Win Rate"/>
+
+
+Linear model for white's win rate as predicted by the rating difference
+
+```
+> summary(lm_model)
+
+Call:
+lm(formula = wr ~ rating_diff, data = plot_df)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.61550 -0.07892 -0.00039  0.08025  0.44467 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 5.174e-01  4.513e-03   114.7   <2e-16 ***
+rating_diff 9.707e-04  1.911e-05    50.8   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.1239 on 752 degrees of freedom
+Multiple R-squared:  0.7743,	Adjusted R-squared:  0.774 
+F-statistic:  2580 on 1 and 752 DF,  p-value: < 2.2e-16
+```
 
 
  
