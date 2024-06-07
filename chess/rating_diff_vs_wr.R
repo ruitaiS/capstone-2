@@ -12,7 +12,7 @@ plot_df <- main_df %>%
 plot <- ggplot(plot_df, aes(x = rating_diff, y = wr)) +
   geom_point() +
   labs(title = "Rating Difference Vs. Win Rate",
-       x = "White - Black Ratings",
+       x = "(White - Black) Rating Difference",
        y = "White's Win Rate") +
   geom_smooth(method = "lm", se = FALSE, color = "red") +
   theme_minimal()+
