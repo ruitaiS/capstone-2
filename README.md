@@ -39,16 +39,6 @@ F-statistic:  2580 on 1 and 752 DF,  p-value: < 2.2e-16
 ```
 
 
- 
-
- I also plotted white vs. black according to their overall win rates, as well as the win rates for the side they were playing as. These plots are much more sparse because I had to restrict the datasets to players who had at least 5 games on each side - otherwise they got extremely noisy with many players clustered along the edges of the plot. Maybe because of this restriction, I didn't find these plots to be very informative:
-<div align="center">
-<img src="/chess/graphs/white_vs_black_WR.png" align="center" alt="Outcome by Win Rate Per Side"
-	title="Outcome by Win Rate Per Side"/>
-	<img src="/chess/graphs/white_vs_black_overall_WR.png" align="center" alt="Outcome by Average Win Rate"
-	title="Outcome by Average Win Rate"/>
-</div>
-
 Next I wanted to check the effect of various opening plays on the final outcome of a match. Looking at the density plot, some openers are much more frequently used than others, and I wanted to know whether it was because they were more consistently successful in securing a win.
 
 <img src="/chess/graphs/openers_count_density.png" align="center" alt="Density Plot of Instances of Each Opener"
