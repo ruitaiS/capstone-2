@@ -11,15 +11,14 @@ split_dataframe_by_moves <- function(data, n) {
 
 split_data <- split_dataframe_by_moves(train_df, 3)
 
-# Histogram
-num_rows <- sapply(split_data, function(df) nrow(df))
+opening_seq <- data.frame(seq = names(split_data))
+opening_seq$seq <- names(split_data)
+opening_seq$count <- sapply(split_data, function(df) nrow(df))
+opening_seq$wr <- sapply(split_data, function(df){mean(df$winner)})
 
+top_sequences <- head(opening_seq[order(-opening_seq$count), ], 25)
 # Plot a histogram of the row counts
-hist(num_rows, main = "Histogram of Number of Rows in Dataframes",
-     xlab = "Number of Rows", ylab = "Frequency",
-     col = "lightblue", border = "black")
-
-# Mean Wins
-wr <- sapply(split_data, function(df){
-  mean(df$winner)
-})
+plot <- ggplot(top_sequences, aes(x = seq, y = count)) +
+  geom_bar(stat = "identity", fill = "skyblue", width = 0.5) +
+  labs(x = "Sequence", y = "Count") +
+  theme_minimal()

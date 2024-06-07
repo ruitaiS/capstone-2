@@ -87,20 +87,11 @@ final_holdout_test <- results[[1]]
 main_df <- results[[2]]
 rm(results, holdout_index, data)
 
-# K-fold Cross Validation; k = 5
+# K-fold Cross Validation
 folds <- createFolds(main_df$winner, k = 5, list = TRUE, returnTrain = FALSE)
 generate_splits <- function(index){
   return (consistency_check(main_df[folds[[index]],], main_df[-folds[[index]],]))
-  #return (list(data[folds[[index]],],
-  #                 data[-folds[[index]],]))
 }
-
-# Split Along Fold (Pick New Index Each Run)
-splits <- generate_splits(index=1)
-test_df <- splits[[1]]
-train_df <- splits[[2]]
-rm(splits)
-
 #########################################################
 
 # Storing Results:
