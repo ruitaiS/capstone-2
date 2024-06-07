@@ -8,11 +8,15 @@ A methods/analysis section that explains the process and techniques used, includ
 
 The first thing I did was to compare the game outcomes with the player ratings. Lichess uses the Glicko 2 rating system, which starts players off with a rating of 1500, adjusting it as the players play more games and accumulate more wins and losses. Since it is a numerical representation of a player's skill level, it is, as one might expect, a very reliable predictor of the outcome of a match.
 
-<img src="/chess/graphs/white_vs_black_ratings.png" align="center" alt="White vs. Black Rating"
+<div>
+
+<img src="/chess/graphs/white_vs_black_ratings.png" align="left" width="50%" alt="White vs. Black Rating"
 	title="White vs. Black Rating"/>
 
- <img src="/chess/graphs/wr_by_rating_diff_filtered_regline.png" align="center" alt="Rating Difference Vs. Win Rate"
+ <img src="/chess/graphs/wr_by_rating_diff_filtered_regline.png" align="right" width="50%" alt="Rating Difference Vs. Win Rate"
 	title="Rating Difference Vs. Win Rate"/>
+
+ </div>
 
 
 Linear model for white's win rate as predicted by the rating difference
