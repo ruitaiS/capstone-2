@@ -38,6 +38,9 @@ data <- filter(data, winner != "draw")
 # Encode winner column
 data$winner <- ifelse(data$winner == "black", 0, 1)
 
+# Store moves as list
+data$moves <- lapply(strsplit(data$moves, " "), as.character)
+
 # Only Rated games
 data$rated <- tolower(data$rated)
 data <- filter(data, rated == 'true')
