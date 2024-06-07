@@ -1,24 +1,16 @@
-split_dataframe_by_moves <- function(data, N) {
-  # Initialize an empty list to store the resulting dataframes
-  df_list <- list()
-  
-  # Get unique sequences of moves up to N moves
-  unique_moves <- unique(sapply(strsplit(data$moves, " "), function(x) paste(x[1:N], collapse = " ")))
-  
-  # Loop through each unique sequence of moves
-  for (move in unique_moves) {
+split_by_first_n_moves <- function(data, n) {
+  results <- list()
+  n_length_openers <- unique(lapply(data$moves, function(x) x[1:n])) 
+  for (opener in n_length_openers) {
     # Subset the data where the first N moves match the current unique sequence
-    subset_df <- data[grep(paste0("^", move), data$moves), ]
-    
-    # Store the subset dataframe in the list
-    df_list[[move]] <- subset_df
+    #subset_df <- data[grep(paste0("^", move), data$moves), ]
+    subset_df <- data[sapply(data$moves, function(x) all(x[1:n] == opener)), ]
+    results[[opener]] <- subset_df
   }
-  
-  # Return the list of dataframes
-  return(df_list)
+  return(results)
 }
 
-split_data <- split_dataframe_by_moves(train_df, 3)
+split_data <- split_by_first_n_moves(train_df, 3)
 
 # Histogram
 num_rows <- sapply(split_data, function(df) nrow(df))
