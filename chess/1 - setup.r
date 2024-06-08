@@ -103,7 +103,7 @@ cf <- function(predicted, observed){
 }
 
 # Accuracy Calculation Function:
-accuracy <- function(predicted, observed) {
+calculate_accuracy <- function(predicted, observed) {
   return(mean(predicted == observed))
 }
 

@@ -31,8 +31,8 @@ plot <- ggplot(tuning_results, aes(x = cutoff)) +
   geom_point(aes(y = dataset_size/nrow(main_df), color = "Percentage of Dataset")) +  # Dataset percentage plot
   geom_line(aes(y = dataset_size/nrow(main_df), color = "Percentage of Dataset")) +
   scale_color_manual(values = c("Accuracy" = "blue", "Percentage of Dataset" = "red"), guide = guide_legend(title = "")) +  # Define color scale
-  labs(x = "Rating Difference Cutoff", y = "") +
-  ggtitle("Cutoff Subsetting") +
+  labs(x = "Minimum Rating Difference", y = "") +
+  ggtitle("Minimum Rating Difference Subsetting") +
   theme(legend.position = "right")+
   theme_minimal()+
   theme(
