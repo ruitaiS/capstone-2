@@ -35,7 +35,7 @@ plot <- ggplot(tuning_results_2, aes(x = cutoff, y = accuracy)) +
   geom_hline(yintercept = by_majority_acc, linetype = "dashed", color = "red") +
   #geom_hline(yintercept = by_rating_acc, linetype = "dashed", color = "blue") +
   labs(x = "Cutoff", y = "Accuracy") +
-  ggtitle("Cutoff Subset Ensembling")+
+  ggtitle("Cutoff Subset Ensemble 1")+
   theme_minimal()+
   theme(
     text = element_text(size = unit(2, "mm")),
@@ -53,7 +53,7 @@ plot2 <- ggplot(tuning_results_2, aes(x = cutoff, y = accuracy)) +
   geom_hline(yintercept = by_majority_acc, linetype = "dashed", color = "red") +
   geom_hline(yintercept = by_rating_acc, linetype = "dashed", color = "blue") +
   labs(x = "Cutoff", y = "Accuracy") +
-  ggtitle("Cutoff Subset Ensembling") +
+  ggtitle("Cutoff Subset Ensemble 1") +
   theme_minimal()+
   theme(
     text = element_text(size = unit(2, "mm")),
