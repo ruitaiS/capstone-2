@@ -6,6 +6,13 @@ An introduction/overview/executive summary section that describes the dataset an
 ## Methods / Analysis:
 A methods/analysis section that explains the process and techniques used, including data cleaning, data exploration and visualization, any insights gained, and your modeling approach. At least two different models or algorithms must be used, with at least one being more advanced than linear or logistic regression for prediction problems.
 
+* Data cleaning (no draws, rated games only, moves from string into list)
+* Players dataframe
+* Rating bins
+* N-length opening sequence bins
+* Opener ECO bins
+
+
 The first thing I did was to compare the game outcomes with the player ratings. Lichess uses the Glicko 2 rating system, which starts players off with a rating of 1500, adjusting it as the players play more games and accumulate more wins and losses. Since it is a numerical representation of a player's skill level, it is, as one might expect, a very reliable predictor of the outcome of a match.
 
 <div style="display: flex; justify-content: space-between; width: 100%;">
@@ -37,14 +44,6 @@ Residual standard error: 0.1239 on 752 degrees of freedom
 Multiple R-squared:  0.7743,	Adjusted R-squared:  0.774 
 F-statistic:  2580 on 1 and 752 DF,  p-value: < 2.2e-16
 ```
-
-<img src="/chess/graphs/cutoff_subsetting0.png" align="center" alt="Cutoff Subsetting"
-	title="Cutoff Subsetting"/>
-
-<div style="display: flex; justify-content: space-between; width: 100%;">
-    <img src="/chess/graphs/cutoff_subsetting1.png" style="width: 45%;" alt="Cutoff Subset Ensembling 1" title="Cutoff Subset Ensembling 1"/>
-    <img src="/chess/graphs/cutoff_subsetting2.png" style="width: 45%;" alt="Cutoff Subset Ensembling 2" title="Cutoff Subset Ensembling 2"/>
-</div>
 
 
 Next I wanted to check the effect of various opening plays on the final outcome of a match. Looking at the density plot, some openers are much more frequently used than others, and I wanted to know whether it was because they were more consistently successful in securing a win.
@@ -115,7 +114,40 @@ Finally I looked at the number of moves taken during the match. I didn't expect 
 
 ### Simple Algorithms
 
-Like with the movielens project, I started out with some very basic prediction methods. 
+Like with the movielens project, I started out with some very basic prediction methods.
+
+* Guess train set majority winner every time
+* Always guess higher rated player
+* 
+
+###
+
+Experimental Ensemble 0/1/2
+TODO:
+* Charts better (remove the crap ones)
+* Explain the theory / approach to it better. I think this is actually not a bad approach
+* The first set of charts only looks at where the rating difference is HIGHER than a cutoff value
+* The second set of charts look at where the rating difference is LOWER than a cutoff value
+
+* Assume that the training set winning proportion is THE global, of all chess games ever winning proportion
+* 
+
+<img src="/chess/graphs/cutoff_subsetting0.png" align="center" alt="Cutoff Subsetting"
+	title="Cutoff Subsetting"/>
+
+<div style="display: flex; justify-content: space-between; width: 100%;">
+    <img src="/chess/graphs/cutoff_subsetting1.png" style="width: 45%;" alt="Cutoff Subset Ensembling 1" title="Cutoff Subset Ensembling 1"/>
+    <img src="/chess/graphs/cutoff_subsetting2.png" style="width: 45%;" alt="Cutoff Subset Ensembling 2" title="Cutoff Subset Ensembling 2"/>
+</div>
+
+Experimental Ensemble 3
+* instead check how badly guessing the higher rated player performs as we subset smaller and smaller gaps
+* Here we see that within a certain range, guessing the higher rated player performs closer to 50%. If the white to black win proportion holds across the board, then we should be able to improve by switching from picking the higher rated player, to picking the globally higher proportion win team.
+
+<img src="/chess/graphs/cutoff_subsetting3.png" align="center" alt="Cutoff Subsetting"
+	title="Cutoff Subsetting"/>
+* Do Ensembling with this group
+
 
 ## Results:
 A results section that presents the modeling results and discusses the model performance.
