@@ -38,6 +38,14 @@ Multiple R-squared:  0.7743,	Adjusted R-squared:  0.774
 F-statistic:  2580 on 1 and 752 DF,  p-value: < 2.2e-16
 ```
 
+<img src="/chess/graphs/cutoff_subsetting0.png" align="center" alt="Cutoff Subsetting"
+	title="Cutoff Subsetting"/>
+
+<div style="display: flex; justify-content: space-between; width: 100%;">
+    <img src="/chess/graphs/cutoff_subsetting1.png" style="width: 45%;" alt="Cutoff Subset Ensembling 1" title="Cutoff Subset Ensembling 1"/>
+    <img src="/chess/graphs/cutoff_subsetting2.png" style="width: 45%;" alt="Cutoff Subset Ensembling 2" title="Cutoff Subset Ensembling 2"/>
+</div>
+
 
 Next I wanted to check the effect of various opening plays on the final outcome of a match. Looking at the density plot, some openers are much more frequently used than others, and I wanted to know whether it was because they were more consistently successful in securing a win.
 
