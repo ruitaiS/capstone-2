@@ -1,20 +1,16 @@
-split_dataframe_by_moves <- function(data, n) {
-  results <- list()
-  # Get unique sequences of moves up to n moves
-  unique_moves <- unique(sapply(strsplit(data$moves, " "), function(x) paste(x[1:n], collapse = " ")))
-  for (move in unique_moves) {
-    subset_df <- data[grep(paste0("^", move), data$moves), ]
-    results[[move]] <- subset_df
-  }
-  return(results)
-}
-
-split_data <- split_dataframe_by_moves(train_df, 3)
+split_data <- main_df %>%
+  mutate(first_three_elements = sapply(moves, function(x) paste(head(x, 3), collapse = ","))) %>%
+  split(.$first_three_elements)
 
 opening_seq <- data.frame(seq = names(split_data))
-opening_seq$seq <- names(split_data)
 opening_seq$count <- sapply(split_data, function(df) nrow(df))
 opening_seq$wr <- sapply(split_data, function(df){mean(df$winner)})
+opening_seq$avg_white_rating <- sapply(split_data, function(df){mean(df$white_rating)})
+opening_seq$avg_black_rating <- sapply(split_data, function(df){mean(df$black_rating)})
+opening_seq$rating_diff <- sapply(split_data, function(df){mean(df$white_rating - df$black_rating)})
+
+winning_openers <- 
+losing_openers <- 
 
 top_sequences <- head(opening_seq[order(-opening_seq$count), ], 25)
 # Plot a histogram of the row counts
