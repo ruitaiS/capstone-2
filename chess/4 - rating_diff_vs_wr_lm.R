@@ -16,9 +16,10 @@ plot_df <- dataset %>%
 plot <- ggplot(plot_df, aes(x = rating_diff, y = wr)) +
   geom_point() +
   labs(title = "Rating Difference Vs. Win Rate",
-       x = "(White - Black) Rating Difference",
+       x = "White Minus Black Rating Difference",
        y = "White's Win Rate") +
-  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  geom_smooth(method = "lm", se = FALSE, color = "red")+
+  ylim(-0, 1) +
   theme_minimal()+
   theme(
     text = element_text(size = unit(10, "mm")),
@@ -27,7 +28,7 @@ plot <- ggplot(plot_df, aes(x = rating_diff, y = wr)) +
     axis.text = element_text(size = unit(10, "mm"))
   )
 print(plot)
-#store_plot("wr_by_rating_diff_filtered_regline.png", plot, h = 6, w=6)
+store_plot("wr_by_rating_diff_filtered_regline.png", plot, h = 6, w=6)
 
 # Linear Model Predicting WR as a function of the rating difference
 rating_lm_model <- lm(wr ~ rating_diff, data = plot_df)
