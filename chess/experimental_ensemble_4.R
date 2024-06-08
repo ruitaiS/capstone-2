@@ -6,11 +6,11 @@ tuning_results_4 <- data.frame(accuracy = numeric(),
 # (TODO) Check the logic here
 for (cutoff in 1:max(abs(main_df$white_rating - main_df$black_rating))-1) {
   filtered <- main_df %>%
-    filter(abs(white_rating - black_rating) > cutoff)
+    filter(abs(white_rating - black_rating) < cutoff)
   remaining <- main_df[!(rownames(main_df) %in% rownames(filtered)), ]
   
-  filtered_set_predictions <- rep(ifelse(mean(remaining$winner) >= 0.5, 1, 0), nrow(remaining))
-  remaining_set_predictions <- ifelse(filtered$white_rating >= filtered$black_rating, 1, 0)
+  filtered_set_predictions <- ifelse(filtered$white_rating >= filtered$black_rating, 1, 0)
+  remaining_set_predictions <- rep(ifelse(mean(remaining$winner) >= 0.5, 1, 0), nrow(remaining))
   predicted <- c(filtered_set_predictions, remaining_set_predictions)
   
   accuracy <- calculate_accuracy(predicted, main_df$winner)
