@@ -1,6 +1,6 @@
 # Set which dataset to use
 # Use main_df for all training data; train_df for train split only
-dataset <- main_df
+dataset <- main_df #train_df
 
 #> length(unique(dataset$opening_name))
 

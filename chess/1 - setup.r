@@ -95,13 +95,19 @@ generate_splits <- function(index){
 #########################################################
 
 # Storing Results:
-results_df <- data.frame(Algorithm = character(),
+results <- data.frame(Algorithm = character(),
                       Accuracy = numeric(),
                       stringsAsFactors = FALSE)
 
+# Simplified Confusion Matrix Function
+cf <- function(predicted, observed){
+  return (confusionMatrix(factor(predicted, levels = c(0, 1)),
+                          factor(observed, levels = c(0,1))))
+}
+
 # Accuracy Calculation Function:
-calculate_accuracy <- function(predicted_outcomes, actual_outcomes) {
-  return(mean(predicted_outcomes == actual_outcomes))
+accuracy <- function(predicted, observed) {
+  return(mean(predicted == observed))
 }
 
 store_plot<- function(filename, plot, h = 6, w = 12) {

@@ -33,4 +33,4 @@ print(plot)
 rating_lm_model <- lm(wr ~ rating_diff, data = plot_df)
 summary(rating_lm_model)
 
-rm(dataset, plot, plot2)
+rm(dataset, plot)
