@@ -1,4 +1,16 @@
+# fold_index 0 means the full main_df is used
+
 observed <- test_df$winner
+
+# Random Guess
+fold_index <- 0
+predicted <- sample(0:1, length(main_df$winner), replace = TRUE)
+results <- rbind(results, data.frame(
+  Algorithm = "Random Guess",
+  Accuracy = calculate_accuracy(
+    predicted,
+    main_df$winner),
+  Fold = fold_index))
 
 # Predict Based on Dataset's Majority Winner
 predicted <- rep(ifelse(mean(train_df$winner) >= 0.5, 1, 0), length(test_df$winner))
