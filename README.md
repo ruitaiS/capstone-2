@@ -117,6 +117,7 @@ Finally I looked at the number of moves taken during the match. I didn't expect 
 Like with the movielens project, I started out with some very basic prediction methods.
 
 * Guess train set majority winner every time
+* Discuss why white winning proportion remains the same, regardless of dataset, assuming an equal distribution of skill across both sides. This is a well known statistical advantage in favor of white because of the [first move advantage](https://en.wikipedia.org/wiki/First-move_advantage_in_chess)
 * Always guess higher rated player
 * 
 
@@ -132,6 +133,13 @@ Increasing the minimum rating advantage also increases the likelihood the higher
 As the green line shows, the increase in accuracy never outstrips the decrease in dataset size. The Accuracy * Percentage product shows the proportion of the full dataset we're able to make correct predictions on. A cutoff that gives 100% accurate predictions but is only applicable to 50% of the dataset would be less valuable than a cutoff that gives 60% accurate predictions, but is applicable to the full dataset, because the former would only be able to make correct predictions for 50% of the data, while the latter would give correct predictions for 60%.
 
 However, the green line is slightly misleading, because it assumes that whatever algorithm we use for the remainder of the data will always get the prediction wrong. It is more correctly interpreted as a lower bound for any ensemble algorithm we use with that cutoff - we already know that even if we always guess white for the remaining data, we should get slightly more than half of the remaining data correct.
+
+Before we get into that, let's examine the data from the opposite perspective. Below is a chart showing the accuracy of the algorithm when restricting the dataset to a maximum rating advantage cutoff. Here, instead of looking at how well the algorithm performs when the rating difference is large, we're looking at how poorly the algorithm performs when the rating difference is small. When the maximum allowed rating advantage is very large, we have close to the full dataset, so the performance at larger cutoffs approximates the performance when applied to the full dataset, shown as the dashed blue line. However, the more we restrict the maximum rating advantage, the worse the algorithm performs. For sets where there is very little difference in rating between the two players, the higher rated player is really only better on paper, and the model performs worse than guessing white wins every game, shown by the dashed red line (The actual performance of "white always wins" is not shown because white's win rate is assumed to be constant for all sets of games where skill between the two sides is equally distributed, as discussed earlier - TODO: Rephrase)
+
+<img src="/chess/graphs/cutoff_subsetting2.png" align="center" alt="Cutoff Subsetting"
+	title="Cutoff Subsetting"/>
+
+
 
 ###
 
