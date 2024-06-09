@@ -46,7 +46,7 @@ by_rating_acc <- calculate_accuracy(
 
 plot <- ggplot(tuning_results_3, aes(x = cutoff, y = accuracy)) +
   #geom_point() +
-  geom_line(size=1.5) +
+  geom_line(color = "purple", size=1.5) +
   geom_hline(yintercept = by_majority_acc, linetype = "dashed", color = "red") +
   geom_hline(yintercept = by_rating_acc, linetype = "dashed", color = "blue") +
   labs(x = "Cutoff", y = "Accuracy") +
@@ -61,4 +61,4 @@ plot <- ggplot(tuning_results_3, aes(x = cutoff, y = accuracy)) +
   )
 
 print(plot)
-store_plot("cutoff_subsetting3.png", plot, h = 6, w = 6)
+store_plot("cutoff_subsetting3.png", plot)
