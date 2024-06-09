@@ -114,7 +114,10 @@ Finally I looked at the number of moves taken during the match. I didn't expect 
 
 ### Simple Algorithms
 
-Like with the movielens project, I started out with some very basic prediction methods.
+(TODO: Write better) 
+Like with the movielens project, I started out with some very basic prediction methods. Randomly picking a winner predictably results in an accuracy of (TODO), but what may be surprising is that picking white to win every game actually has a higher accuracy, at (TODO). One might assume that both sides are equally likely to win, but actually is not the case.
+
+
 
 * Guess train set majority winner every time
 * Discuss why white winning proportion remains the same, regardless of dataset, assuming an equal distribution of skill across both sides. This is a well known statistical advantage in favor of white because of the [first move advantage](https://en.wikipedia.org/wiki/First-move_advantage_in_chess)
