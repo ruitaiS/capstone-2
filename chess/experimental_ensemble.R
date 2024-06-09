@@ -57,8 +57,8 @@ plot <- ggplot(tuning_results, aes(x = cutoff)) +
   scale_color_manual(values = c("Accuracy" = "blue", "Percentage of Dataset" = "red", "Accuracy * Percentage" = "green"),
                      breaks = c("Accuracy", "Percentage of Dataset", "Accuracy * Percentage")) +
   #scale_color_manual(values = c("Accuracy" = "blue", "Percentage of Dataset" = "red"), guide = guide_legend(title = "")) +
-  labs(x = "Minimum Rating Difference", y = "") +
-  ggtitle("Minimum Rating Difference Subsetting") +
+  labs(x = "Minimum Rating Advantage", y = "") +
+  ggtitle("Minimum Rating Advantage Subsetting") +
   theme(legend.position = "right")+
   theme_minimal()+
   theme(

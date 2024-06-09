@@ -51,6 +51,7 @@ plot <- ggplot(tuning_results_3, aes(x = cutoff, y = accuracy)) +
   geom_hline(yintercept = by_rating_acc, linetype = "dashed", color = "blue") +
   labs(x = "Cutoff", y = "Accuracy") +
   ggtitle("Cutoff Subset Ensemble") +
+  scale_x_reverse() +
   theme_minimal()+
   theme(
     text = element_text(size = unit(2, "mm")),
