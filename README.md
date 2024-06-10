@@ -127,7 +127,7 @@ Like with the movielens project, I started out with some very basic prediction m
 
 * Whites' first move advantage is more pronounced at higher skill levels, and less so at lower levels. For the most part, unless otherwise specified (such as in the rating binning section), we will assume a constant skill distribution across players for every subset of the data. 
 
-<img src="/chess/graphs/cutoff_subsetting2.png" align="center" alt="Cutoff Subsetting"
+<img src="/chess/graphs/cutoff_subsetting2-white_wins.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
 
  
