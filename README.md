@@ -119,8 +119,18 @@ Like with the movielens project, I started out with some very basic prediction m
 
 
 
-* Guess train set majority winner every time
-* Discuss why white winning proportion remains the same, regardless of dataset, assuming an equal distribution of skill across both sides. This is a well known statistical advantage in favor of white because of the [first move advantage](https://en.wikipedia.org/wiki/First-move_advantage_in_chess)
+* Guessing the winner leads to around 50% correct rate
+
+* Guessing white as the winner every match yields around 52% correct rate. This is caused by white's first move advantage[first move advantage](https://en.wikipedia.org/wiki/First-move_advantage_in_chess)
+ 
+> Since 1851, compiled statistics support this view; White consistently wins slightly more often than Black, usually achieving a winning percentage between 52 and 56 percent.[nb 1] White's advantage is less significant in games ... between lower-level players, and becomes greater as the level of play rises... As the standard of play rises, all the way up to top engine level, the number of decisive games approaches zero, and the proportion of White wins among those decisive games approaches 100%
+
+* Whites' first move advantage is more pronounced at higher skill levels, and less so at lower levels. For the most part, unless otherwise specified (such as in the rating binning section), we will assume a constant skill distribution across players for every subset of the data, and so we model this advantage as a constant proportion centered on the mean across the dataset, attributing any deviation to random variance (especially pronounced for small sample sizes, as seen in the plot below)
+
+<img src="/chess/graphs/cutoff_subsetting2-white_wins.png" align="center" alt="Cutoff Subsetting"
+	title="Cutoff Subsetting"/>
+
+ 
 * Always guess higher rated player
 * 
 
@@ -137,12 +147,23 @@ As the green line shows, the increase in accuracy never outstrips the decrease i
 
 However, the green line is slightly misleading, because it assumes that whatever algorithm we use for the remainder of the data will always get the prediction wrong. It is more correctly interpreted as a lower bound for any ensemble algorithm we use with that cutoff - we already know that even if we always guess white for the remaining data, we should get slightly more than half of the remaining data correct.
 
-Before we get into that, let's examine the data from the opposite perspective. Below is a chart showing the accuracy of the algorithm when restricting the dataset to a maximum rating advantage cutoff. Here, instead of looking at how well the algorithm performs when the rating difference is large, we're looking at how poorly the algorithm performs when the rating difference is small. When the maximum allowed rating advantage is very large, we have close to the full dataset, so the performance at larger cutoffs approximates the performance when applied to the full dataset, shown as the dashed blue line. However, the more we restrict the maximum rating advantage, the worse the algorithm performs. For sets where there is very little difference in rating between the two players, the higher rated player is really only better on paper, and the model performs worse than guessing white wins every game, shown by the dashed red line (The actual performance of "white always wins" is not shown because white's win rate is assumed to be constant for all sets of games where skill between the two sides is equally distributed, as discussed earlier - TODO: Rephrase)
+Before we get into that, let's examine the data from the opposite perspective. Below is a chart showing the accuracy of the algorithm when restricting the dataset to a maximum rating advantage cutoff. Here, instead of looking at how well the algorithm performs when the rating difference is large, we're looking at how poorly the algorithm performs when the rating difference is small. When the maximum allowed rating advantage is very large, we have close to the full dataset, so the performance at larger cutoffs approximates the performance when applied to the full dataset, shown as the dashed blue line. However, the more we restrict the maximum rating advantage, the worse the algorithm performs. For sets where there is very little difference in rating between the two players, the higher rated player is really only better on paper, and predicting the higher rated player to win in these cases is akin to picking a winner at random. 
+
+the model performs worse than guessing white wins every game, shown by the dashed red line (The actual performance of "white always wins" is not shown because white's win rate is assumed to be constant for all sets of games where skill between the two sides is equally distributed, as discussed earlier - TODO: Rephrase)
 
 <img src="/chess/graphs/cutoff_subsetting2.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
+ * Any set with large maximum allowed rating differences (the far left of the graph) includes most of the dataset, so the model performs similarly as it would if we'd applied it to the entire dataset (the dashed blue line)
+ * Any set with very small maximum allowed differences (the gray portion of the graph), the difference in rating between the two players is largely an artefact of the way the rating system scores players, and the model performs similarly to picking a winner at random. At these minute rating differences, even the 2% first mover advantage overshadows the predictive power of the rating system.
 
- When the rating difference between two players is small, we would be better off switching to another model, even the simplistic "white always wins", as predicting the higher rated player to win in these cases is akin to picking a winner at random. The next graph shows the performance of an ensemble model which switches between "white always wins" and "higher rated player wins" depending on whether the rating difference is below a certain threshold. As we see, for small rating differences, this ensemble slightly outperforms the "higher rated player wins" model.
+  We can see that the cutoff at which this occurs is 55. When there is more than a 55 point rating advantage in either direction, we should strictly predict in favor of the higher rated player. However, there is a dataset of close to 5000 games for which this prediction method performs worse than guessing "white always wins", and therefore should be switched out for another algorithm
+```
+> tuning_results_2[which(tuning_results_2$accuracy < by_majority_acc),]
+      accuracy dataset_size cutoff
+1236 0.5215301         4784     55
+```
+
+Let's start with the simplistic "white always wins." The next graph shows the performance of an ensemble model which switches between "white always wins" and "higher rated player wins" depending on whether the rating difference is below a certain threshold.
 
 <img src="/chess/graphs/cutoff_subsetting3_standard.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
@@ -150,7 +171,11 @@ Before we get into that, let's examine the data from the opposite perspective. B
  <img src="/chess/graphs/cutoff_subsetting3_zoomed.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
 
- The cutoff at which this occurs is (todo).
+ * For small rating difference cutoffs ( the right side, and zoomed in portion of the graph), this ensemble outperforms the "higher rated player wins" model.
+ * For a rating difference cutoff of 0, the ensemble never switches out of "higher rated player wins" for any of the games and so it matches the output of that model (the dashed blue line).
+ * For very large rating difference cutoffs (the left side of the graph), we're switching to "white always wins" for almost all the games, and so it matches the output of that model (the red dashed line)
+
+We will now focus on improving performance over "white always wins" in this subsetted group where the rating difference is 55 points or lower. If it substantially outperforms, we may need to go back and revisit the transition cutoff out of "higher rated wins" to the new model.
 
  * Rating Bins for the players in this group
  * opening eco win rate for each group
