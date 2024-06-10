@@ -40,6 +40,9 @@ by_rating_acc <- calculate_accuracy(
 # First cutoff where higher player wins gives lower accuracy than guessing white for all
 threshold <- max(tuning_results_2[which(tuning_results_2$accuracy < by_majority_acc),]$cutoff)
 
+# More Information on Threshold:
+tuning_results_2[which(tuning_results_2$accuracy < by_majority_acc),]
+
 plot <- ggplot(tuning_results_2, aes(x = cutoff)) +
   scale_x_reverse() +
   geom_rect(aes(xmin = -Inf, xmax = threshold, ymin = -Inf, ymax = Inf), fill = "gray", alpha = 0.2) +
