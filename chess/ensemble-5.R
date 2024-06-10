@@ -11,7 +11,7 @@ bin_winner <- function(white_rating, black_rating, moves, count_cutoff){
   if (nrow(match)>0){
     return (ifelse(match$bin_mean >= 0.5, 1, 0))
   }else{
-    return (1)
+    return (as.integer(1))
   }
 }
 
@@ -41,9 +41,7 @@ for (count_cutoff in seq(0, 200, 10)){
         return (bin_winner(row[['white_rating']], row[['black_rating']], row['moves'], count_cutoff))
       }
     })
-    if (typeof(predicted) == "object")
-    print(predicted)
-    accuracy <- calculate_accuracy(predicted, main_df$winner)
+    accuracy <- calculate_accuracy(unlist(predicted), main_df$winner)
     tuning_results_4 <- rbind(tuning_results_4, data.frame(
       accuracy = accuracy,
       cutoff = cutoff,
