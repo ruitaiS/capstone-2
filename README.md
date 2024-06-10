@@ -119,8 +119,18 @@ Like with the movielens project, I started out with some very basic prediction m
 
 
 
-* Guess train set majority winner every time
-* Discuss why white winning proportion remains the same, regardless of dataset, assuming an equal distribution of skill across both sides. This is a well known statistical advantage in favor of white because of the [first move advantage](https://en.wikipedia.org/wiki/First-move_advantage_in_chess)
+* Guessing the winner leads to around 50% correct rate
+
+* Guessing white as the winner every match yields around 52% correct rate. This is caused by white's first move advantage[first move advantage](https://en.wikipedia.org/wiki/First-move_advantage_in_chess)
+ 
+> Since 1851, compiled statistics support this view; White consistently wins slightly more often than Black, usually achieving a winning percentage between 52 and 56 percent.[nb 1] White's advantage is less significant in games ... between lower-level players, and becomes greater as the level of play rises... As the standard of play rises, all the way up to top engine level, the number of decisive games approaches zero, and the proportion of White wins among those decisive games approaches 100%
+
+* Whites' first move advantage is more pronounced at higher skill levels, and less so at lower levels. For the most part, unless otherwise specified (such as in the rating binning section), we will assume a constant skill distribution across players for every subset of the data. 
+
+<img src="/chess/graphs/cutoff_subsetting2.png" align="center" alt="Cutoff Subsetting"
+	title="Cutoff Subsetting"/>
+
+ 
 * Always guess higher rated player
 * 
 
@@ -143,6 +153,8 @@ the model performs worse than guessing white wins every game, shown by the dashe
 
 <img src="/chess/graphs/cutoff_subsetting2.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
+ * Any set with large maximum allowed rating differences (the far left of the graph) includes most of the dataset, so the model performs similarly as it would if we'd applied it to the entire dataset (the dashed blue line)
+ * Any set with very small maximum allowed differences (the gray portion of the graph), the difference in rating between the two players is largely an artefact of the way the rating system scores players, and the model performs similarly to picking a winner at random. At these minute rating differences, even the 2% first mover advantage overshadows the predictive power of the rating system.
 
   We can see that the cutoff at which this occurs is 55. When there is more than a 55 point rating advantage in either direction, we should strictly predict in favor of the higher rated player. However, there is a dataset of close to 5000 games for which this prediction method performs worse than guessing "white always wins", and therefore should be switched out for another algorithm
 ```
