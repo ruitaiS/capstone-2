@@ -19,9 +19,10 @@ ratings <- main_df %>%
   mutate(diff = abs(white_rating - black_rating)) %>%
   select(diff, white_rating, black_rating)
 
-for (cutoff in 0:max(tuning_results$cutoff)) {
+#for (cutoff in 0:max(tuning_results$cutoff)) {
+for (cutoff in 0:60) {
   predicted <- apply(ratings, 1, function(row){
-    if (row['diff'] > cutoff) {
+    if (row['diff'] >= cutoff) {
       return(ifelse(row['white_rating'] >= row['black_rating'], 1, 0))
     } else {
       return(1)
@@ -47,7 +48,7 @@ by_rating_acc <- calculate_accuracy(
 plot <- ggplot(tuning_results_3, aes(x = cutoff, y = accuracy)) +
   #geom_point() +
   geom_line(color = "purple", size=1.5) +
-  geom_hline(yintercept = by_majority_acc, linetype = "dashed", color = "red") +
+  #geom_hline(yintercept = by_majority_acc, linetype = "dashed", color = "red") +
   geom_hline(yintercept = by_rating_acc, linetype = "dashed", color = "blue") +
   labs(x = "Cutoff", y = "Accuracy") +
   ggtitle("Cutoff Subset Ensemble") +
