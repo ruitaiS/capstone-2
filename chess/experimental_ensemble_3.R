@@ -51,7 +51,7 @@ plot <- ggplot(tuning_results_3, aes(x = cutoff, y = accuracy)) +
   #geom_hline(yintercept = by_majority_acc, linetype = "dashed", color = "red") + # Comment out for zoomed
   geom_hline(yintercept = by_rating_acc, linetype = "dashed", color = "blue") +
   labs(x = "Cutoff", y = "Accuracy") +
-  ggtitle("Cutoff Subset Ensemble") +
+  ggtitle("Cutoff Subset Ensemble Zoomed") +
   scale_x_reverse() +
   theme_minimal()+
   theme(
