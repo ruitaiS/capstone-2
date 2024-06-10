@@ -125,7 +125,7 @@ Like with the movielens project, I started out with some very basic prediction m
  
 > Since 1851, compiled statistics support this view; White consistently wins slightly more often than Black, usually achieving a winning percentage between 52 and 56 percent.[nb 1] White's advantage is less significant in games ... between lower-level players, and becomes greater as the level of play rises... As the standard of play rises, all the way up to top engine level, the number of decisive games approaches zero, and the proportion of White wins among those decisive games approaches 100%
 
-* Whites' first move advantage is more pronounced at higher skill levels, and less so at lower levels. For the most part, unless otherwise specified (such as in the rating binning section), we will assume a constant skill distribution across players for every subset of the data, and so we model this advantage as a constant progortion, attributing any deviation to random variance (especially pronounced for small sample sizes, as seen in the plot below)
+* Whites' first move advantage is more pronounced at higher skill levels, and less so at lower levels. For the most part, unless otherwise specified (such as in the rating binning section), we will assume a constant skill distribution across players for every subset of the data, and so we model this advantage as a constant proportion centered on the mean across the dataset, attributing any deviation to random variance (especially pronounced for small sample sizes, as seen in the plot below)
 
 <img src="/chess/graphs/cutoff_subsetting2-white_wins.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
