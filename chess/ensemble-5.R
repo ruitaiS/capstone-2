@@ -1,15 +1,19 @@
 bin_winner <- function(white_rating, black_rating, moves, count_cutoff){
   avg_rating <- (white_rating + black_rating) / 2
   rating_bin <- floor(avg_rating / 100)*100
-  opening_three <- moves[1:3]
+  opening_three <- paste(moves[1:3], collapse = " ")
   
-  match <- summary_data %>%
-    filter(rating_bin == rating_bin,
-           opening_three == opening_three,
-           bin_count >= count_cutoff)
+  #match <- summary_data %>%
+  #  filter(rating_bin == rating_bin,
+  #         opening_three == opening_three,
+  #         bin_count >= count_cutoff)
   
-  if (nrow(match)>0){
-    return (ifelse(match$bin_mean >= 0.5, 1, 0))
+  match_index <- which(summary_data$rating_bin == rating_bin & 
+          summary_data$opening_three == opening_three &
+          summary_data$bin_count >= count_cutoff)
+  
+  if (length(match_index)>0){
+    return (ifelse(summary_data[match_index,]$bin_mean >= 0.5, 1, 0))
   }else{
     return (as.integer(1))
   }
@@ -30,8 +34,10 @@ tuning_results_4 <- data.frame(accuracy = numeric(),
                                count_cutoff = numeric())
 
 for (count_cutoff in seq(0, 200, 10)){
+  print(count_cutoff)
   for (cutoff in 0:max(tuning_results$cutoff)) { # Maintain Previous Scale
   #for (cutoff in 0:60) { # Zoomed
+    print(cutoff)
     predicted <- apply(ratings, 1, function(row){
       #print(typeof(row['white_rating']))
       #print(row['white_rating'])
