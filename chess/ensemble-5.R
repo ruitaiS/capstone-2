@@ -1,67 +1,68 @@
-count_cutoff <- seq(0, 200, 10)
+bin_winner <- function(white_rating, black_rating, moves, count_cutoff){
+  avg_rating <- (white_rating + black_rating) / 2
+  rating_bin <- floor(avg_rating / 100)*100
+  opening_three <- moves[1:3]
+  
+  match <- summary_data %>%
+    filter(rating_bin == rating_bin,
+           opening_three == opening_three,
+           bin_count >= count_cutoff)
+  
+  if (nrow(match)>0){
+    return (ifelse(match$bin_mean >= 0.5, 1, 0))
+  }else{
+    return (1)
+  }
+}
+
+
 
 # Apply count cutoff, and create a line graph for each of them
+  
+#-------------------------------------------------------------------------------
+# Tune Difference Cutoff By Checking Strength in Cutoff Group
+ratings <- main_df %>% 
+  mutate(diff = abs(white_rating - black_rating)) %>%
+  select(diff, white_rating, black_rating, moves)
 
-# Sample data
-x <- 1:10
-y1 <- x^2
-y2 <- 2 * x
-y3 <- sqrt(x)
+tuning_results_4 <- data.frame(accuracy = numeric(),
+                               cutoff = numeric(),
+                               count_cutoff = numeric())
 
-# Create a dataframe
-df <- data.frame(x = x, y1 = y1, y2 = y2, y3 = y3)
+for (count_cutoff in seq(0, 200, 10)){
+  for (cutoff in 0:max(tuning_results$cutoff)) { # Maintain Previous Scale
+  #for (cutoff in 0:60) { # Zoomed
+    predicted <- apply(ratings, 1, function(row){
+      #print(typeof(row['white_rating']))
+      #print(row['white_rating'])
+      if (row[['diff']] >= cutoff) {
+        return(ifelse(row[['white_rating']] >= row[['black_rating']], 1, 0))
+      } else {
+        return (bin_winner(row[['white_rating']], row[['black_rating']], row['moves'], count_cutoff))
+      }
+    })
+    if (typeof(predicted) == "object")
+    print(predicted)
+    accuracy <- calculate_accuracy(predicted, main_df$winner)
+    tuning_results_4 <- rbind(tuning_results_4, data.frame(
+      accuracy = accuracy,
+      cutoff = cutoff,
+      count_cutoff = count_cutoff))
+  }
+}
 
-# Reshape data from wide to long format
-df_long <- tidyr::pivot_longer(df, cols = c(y1, y2, y3), names_to = "Line", values_to = "Value")
+rm(accuracy, cutoff, filtered_set_predictions, remaining_set_predictions, filtered, remaining)
 
-# Plot
-ggplot(df_long, aes(x = x, y = Value, color = Line)) +
+# Test plot: -----
+ggplot(tuning_results_4, aes(x = cutoff, y = accuracy, color = count_cutoff)) +
   geom_line() +
   labs(title = "Multiple Line Plots",
        x = "X-axis",
        y = "Y-axis",
-       color = "Lines") +
+       color = "Count Cutoff") +
   theme_minimal()
+# -----------------------------
 
-
-# As the previous graph shows, there is a rating difference threshold,
-# below which predicting the higher rated player as the winner will actually underperform
-# in comparison to much simpler algorithms such as always predicting white.
-
-# In the accuracy plot below, we predict the higher rated player as the winner
-# for all rows where the rating difference was above the threshold.
-# For the remaining rows,
-# white was always predicted as the winner.
-
-# As the graph shows, for a window of small rating differences,
-# we can actually improve on predicting the higher rated 
-
-tuning_results_3 <- data.frame(accuracy = numeric(),
-                               cutoff = numeric(),
-                               stringsAsFactors = FALSE)
-
-# Tune Difference Cutoff By Checking Strength in Cutoff Group
-ratings <- main_df %>% 
-  mutate(diff = abs(white_rating - black_rating)) %>%
-  select(diff, white_rating, black_rating)
-
-#for (cutoff in 0:max(tuning_results$cutoff)) { # Maintain Previous Scale
-for (cutoff in 0:60) { # Zoomed
-  predicted <- apply(ratings, 1, function(row){
-    if (row['diff'] >= cutoff) {
-      return(ifelse(row['white_rating'] >= row['black_rating'], 1, 0))
-    } else {
-      use_bin_winner(row)
-    }
-  })
-  
-  accuracy <- calculate_accuracy(predicted, main_df$winner)
-  tuning_results_3 <- rbind(tuning_results_3, data.frame(
-    accuracy = accuracy,
-    cutoff = cutoff))
-}
-
-rm(accuracy, cutoff, filtered_set_predictions, remaining_set_predictions, filtered, remaining)
 
 plot <- ggplot(tuning_results_3, aes(x = cutoff, y = accuracy)) +
   #geom_point() +

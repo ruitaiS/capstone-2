@@ -1,11 +1,12 @@
 bin_data <- main_df %>%
   mutate(avg_rating = (white_rating + black_rating) / 2,
          rating_bin = floor(avg_rating / 100) * 100,
-         opening_three = map(moves, ~ .x[1:3]))
+         opening_three = map_chr(moves, ~ paste(.x[1:3], collapse = " ")))
 
 summary_data <- bin_data %>%
   group_by(rating_bin, opening_three) %>%
-  summarize(bin_mean = mean(winner), bin_count = n())
+  summarize(bin_mean = mean(winner),
+            bin_count = n())
 
 # bar plot of bin means
 ggplot(unique(bin_data[, c("rating_bin", "bin_mean")]), aes(x = rating_bin, y = bin_mean)) +
