@@ -144,7 +144,10 @@ Before we get into that, let's examine the data from the opposite perspective. B
 
  When the rating difference between two players is small, we would be better off switching to another model, even the simplistic "white always wins", as predicting the higher rated player to win in these cases is akin to picking a winner at random. The next graph shows the performance of an ensemble model which switches between "white always wins" and "higher rated player wins" depending on whether the rating difference is below a certain threshold. As we see, for small rating differences, this ensemble slightly outperforms the "higher rated player wins" model.
 
-<img src="/chess/graphs/cutoff_subsetting3.png" align="center" alt="Cutoff Subsetting"
+<img src="/chess/graphs/cutoff_subsetting3_standard.png" align="center" alt="Cutoff Subsetting"
+	title="Cutoff Subsetting"/>
+
+ <img src="/chess/graphs/cutoff_subsetting3_zoomed.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
 
  The cutoff at which this occurs is (todo).
