@@ -151,14 +151,19 @@ the model performs worse than guessing white wins every game, shown by the dashe
 1236 0.5215301         4784     55
 ```
 
-Let's start with the simplistic "white always wins." The next graph shows the performance of an ensemble model which switches between "white always wins" and "higher rated player wins" depending on whether the rating difference is below a certain threshold. As we see, for small rating differences, this ensemble slightly outperforms the "higher rated player wins" model.
+Let's start with the simplistic "white always wins." The next graph shows the performance of an ensemble model which switches between "white always wins" and "higher rated player wins" depending on whether the rating difference is below a certain threshold.
 
 <img src="/chess/graphs/cutoff_subsetting3_standard.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
 
  <img src="/chess/graphs/cutoff_subsetting3_zoomed.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
- 
+
+ * For small rating difference cutoffs ( the right side, and zoomed in portion of the graph), this ensemble outperforms the "higher rated player wins" model.
+ * For a rating difference cutoff of 0, the ensemble never switches out of "higher rated player wins" for any of the games and so it matches the output of that model (the dashed blue line).
+ * For very large rating difference cutoffs (the left side of the graph), we're switching to "white always wins" for almost all the games, and so it matches the output of that model (the red dashed line)
+
+We will now focus on improving performance over "white always wins" in this subsetted group where the rating difference is 55 points or lower. If it substantially outperforms, we may need to go back and revisit the transition cutoff out of "higher rated wins" to the new model.
 
  * Rating Bins for the players in this group
  * opening eco win rate for each group
