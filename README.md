@@ -147,31 +147,11 @@ Before we get into that, let's examine the data from the opposite perspective. B
 <img src="/chess/graphs/cutoff_subsetting3.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
 
+ The cutoff at which this occurs is (todo).
 
-###
-
-Experimental Ensemble 0/1/2
-TODO:
-* Charts better (remove the crap ones)
-* Explain the theory / approach to it better. I think this is actually not a bad approach
-* The first set of charts only looks at where the rating difference is HIGHER than a cutoff value
-* The second set of charts look at where the rating difference is LOWER than a cutoff value
-
-* Assume that the training set winning proportion is THE global, of all chess games ever winning proportion
-* 
-
-<div style="display: flex; justify-content: space-between; width: 100%;">
-    <img src="/chess/graphs/cutoff_subsetting1.png" style="width: 45%;" alt="Cutoff Subset Ensembling 1" title="Cutoff Subset Ensembling 1"/>
-    <img src="/chess/graphs/cutoff_subsetting2.png" style="width: 45%;" alt="Cutoff Subset Ensembling 2" title="Cutoff Subset Ensembling 2"/>
-</div>
-
-Experimental Ensemble 3
-* instead check how badly guessing the higher rated player performs as we subset smaller and smaller gaps
-* Here we see that within a certain range, guessing the higher rated player performs closer to 50%. If the white to black win proportion holds across the board, then we should be able to improve by switching from picking the higher rated player, to picking the globally higher proportion win team.
-
-<img src="/chess/graphs/cutoff_subsetting3.png" align="center" alt="Cutoff Subsetting"
-	title="Cutoff Subsetting"/>
-* Do Ensembling with this group
+ * Rating Bins for the players in this group
+ * opening eco win rate for each group
+ * something akin to a decision tree I think. What rating bin are they in; based on that rating bin, and the opening moves, what is the most likely outcome. If we haven't seen any games with those opening moves, then pick white.
 
 
 ## Results:
