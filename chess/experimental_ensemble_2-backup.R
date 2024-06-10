@@ -41,4 +41,4 @@ plot <- ggplot(tuning_results_2_2, aes(x = cutoff)) +
   )
 
 print(plot)
-#store_plot("cutoff_subsetting2-white_wins.png", plot2)
+#store_plot("cutoff_subsetting2-white_wins.png", plot)

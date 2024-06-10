@@ -42,7 +42,7 @@ threshold <- max(tuning_results_2[which(tuning_results_2$accuracy < by_majority_
 
 plot <- ggplot(tuning_results_2, aes(x = cutoff)) +
   scale_x_reverse() +
-  geom_rect(aes(xmin = -Inf, xmax = threshold, ymin = -Inf, ymax = Inf), fill = "lightcoral", alpha = 0.2) +
+  geom_rect(aes(xmin = -Inf, xmax = threshold, ymin = -Inf, ymax = Inf), fill = "gray", alpha = 0.2) +
   geom_hline(yintercept = by_majority_acc, linetype = "dashed", color = "red") +
   geom_hline(yintercept = by_rating_acc, linetype = "dashed", color = "blue") +
   geom_line(aes(y = accuracy, color = "Predict Higher Rated Wins"), size = 1.5) +
@@ -59,4 +59,4 @@ plot <- ggplot(tuning_results_2, aes(x = cutoff)) +
   )
 
 print(plot)
-store_plot("cutoff_subsetting2.png", plot)
+#store_plot("cutoff_subsetting2.png", plot)
