@@ -77,7 +77,8 @@ A strong opener allows a player to establish board control and develop key piece
 <img src="/chess/graphs/openers_count_density.png" align="center" alt="Density Plot of Instances of Each Opener"
 	title="Density Plot of Instances of Each Opener"/>
 
-The ECO code for an 
+The Encyclopedia of Chess Openings `opening_eco` uses the codes established by
+
 ```
 opening_eco opener_wr count
          A00 0.4107383   745
