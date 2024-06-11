@@ -1,30 +1,26 @@
-# Set which dataset to use
-# Use main_df for all training data; train_df for train split only
-dataset <- data#main_df 
+#> length(unique(main_df$opening_name))
 
-#> length(unique(dataset$opening_name))
-
-#> length(unique(dataset$opening_eco))
+#> length(unique(main_df$opening_eco))
 
 # Unique Players Dataframe:
-players <- data.frame(player_id = unique(c(dataset$white_id, dataset$black_id)))
+players <- data.frame(player_id = unique(c(main_df$white_id, main_df$black_id)))
 
 # Player's Game Statistics
-white_wins <- dataset %>%
+white_wins <- main_df %>%
 filter(winner == 1) %>%
 group_by(white_id) %>%
 summarise(white_wins = n())
 
-white_games <- dataset %>%
+white_games <- main_df %>%
   group_by(white_id) %>%
   summarise(white_games = n())
 
-black_wins <- dataset %>%
+black_wins <- main_df %>%
   filter(winner == 1) %>%
   group_by(black_id) %>%
   summarise(black_wins = n())
 
-black_games <- dataset %>%
+black_games <- main_df %>%
   group_by(black_id) %>%
   summarise(black_games = n())
 
@@ -43,4 +39,4 @@ players$white_wr <- players$white_wins/players$white_games
 players$black_wr <- players$black_wins/players$black_games
 players$overall_wr <- (coalesce(players$white_wins, 0) + coalesce(players$black_wins, 0))/(coalesce(players$white_games, 0) + coalesce(players$black_games, 0))
 
-rm(dataset, white_wins, white_games, black_wins, black_games)
+rm(white_wins, white_games, black_wins, black_games)
