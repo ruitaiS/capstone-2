@@ -44,6 +44,7 @@ A `players` dataframe was also created, with statistics for each individual play
 *  `white_wr`, `black_wr`, `overall_wr` - The win rate on each side, as well as the overall win rate
 
 ### Data Analysis
+
 The first thing I did was to compare the game outcomes with the player ratings. Lichess uses the Glicko 2 rating system, which starts players off with a rating of 1500, adjusting it as the players play more games and accumulate more wins and losses. Since it is a numerical representation of a player's skill level, it is, as one might expect, a very reliable predictor of the outcome of a match.
 
 <div style="display: flex; justify-content: space-between; width: 100%;">
