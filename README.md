@@ -56,7 +56,7 @@ A `players` dataframe was also created, with statistics for each individual play
 
 #### First Move Advantage
 
-It may be surprising to know that in chess, wins are not equally distributed between both sides. White always moves first, and there is quite a well documented [first move advantage](https://en.wikipedia.org/wiki/First-move_advantage_in_chess) in chess. We see this effet reflected in our training data, which shows that white wins approximately 52% of all games:
+It may be surprising to know that in chess, wins are not equally distributed between both sides. White always moves first, and there is quite a well documented [first move advantage](https://en.wikipedia.org/wiki/First-move_advantage_in_chess) in chess. We see this effect reflected in our training data, which shows that white wins approximately 52% of all games:
 
 ```
 > mean(main_df$winner)
