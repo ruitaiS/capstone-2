@@ -1,23 +1,6 @@
 # Chess Game Outcome Prediction:
 
-## Introduction:
-An introduction/overview/executive summary section that describes the dataset and variables, and summarizes the goal of the project and key steps that were performed.
-
-The goal of this project to apply a machine learning model to predict the outcome of a chess match based only on player data and their opening moves.
-
-For me chess is one of those things that I wish I was good at, but which I also can't justify spending the amount of time needed to actually learn properly. I understand some broad principles, like controlling the center of the board, maintaining good pawn structure, or developing your pieces to set yourself up in advantageous positions later on in the match, but I admit I know very little about specific opening sequences or the relative strengths and weaknesses of various opening tactics. If you are well versed in chess knowledge, this project most likely will not tell you anything you don't already know. It is really more of a backdrop (TODO Is this even the right word) to apply some of the data science techniques I learned in this course than it is an attempt to derive any meaningful insights about chess itself.
-
-(TODO: Talk about the data more)
-The LiChess dataset used for this project contains several thousand players of varying skill ratings, from beginner to grandmaster. For this project, I focused only on games between rated players (no unrated games) that had a decisive outcome (no draws). After trimming games which did not meet these criteria, a dataset of 15436 games remained. `createDataPartition` was applied to this dataset, with `p = 0.1` and the response vector set to the `winner` column, creating a training set of 13,892 games and a holdout test set of 1,544 games.
-
-The final model is a hybrid approach. The rating difference between two players is the main predictor - when the rating difference is (TODO) points or larger, the model always favors the higher rated player to win. However, when the rating difference is small, it switches over to the (todo) "white always wins" model due to white's first move advantage. Some alternative methods were explored (rating binning, and grouping by first three opening moves), but neither showed improvement over "white wins." I believe this was largely due to an insufficiently large dataset size - only about (todo, check) 5000 games had players with ratings close enough that the rating difference was not overpowering (todo, rephrase), and further subdividing these games along the average rating of the two players and their opening moves created very small sample sizes that held little predictive power. This is definitely an avenue for further research and investigation.
-
-In the end the hybrid model was able to predict games with an accuracy of (todo) on the test set, which is a very slight improvement over the (todo) given by predicting the higher rated player to win.
-
-
-
-'''
-Stuff idk where it goes yet
+### Stuff idk where it goes yet
 
 The early game in chess has been studied extensively. In comparison to the seemingly countless directions a match might go in, there are only a finite number of opening moves and sequences for the players to take at the beginning of the game.  but volumes have been written dedicated to the specific strengths and weaknesses of different opening moves. Even the advantage of white has been extensively analyzed.
 
@@ -29,40 +12,38 @@ Below 1200: Novice or Beginner
 2000 - 2200: Lower Intermediate to Intermediate
 2200 - 2400: Intermediate to Advanced
 2400 and above: Advanced to Expert
-'''
+
+## Introduction:
+An introduction/overview/executive summary section that describes the dataset and variables, and summarizes the goal of the project and key steps that were performed.
+
+The goal of this project to apply a machine learning model to predict the outcome of a chess match based only on player data and their opening moves.
+
+For me chess is one of those things that I wish I was good at, but which I also can't justify spending the amount of time needed to actually learn properly. I understand some broad principles, like controlling the center of the board, maintaining good pawn structure, or developing your pieces to set yourself up in advantageous positions later on in the match, but I admit I know very little about specific opening sequences or the relative strengths and weaknesses of various opening tactics. If you are well versed in chess knowledge, this project most likely will not tell you anything you don't already know. It is really more of a backdrop (TODO Is this even the right word) to apply some of the data science techniques I learned in this course than it is an attempt to derive any meaningful insights about chess itself.
+
+The final model is a hybrid approach. The rating difference between two players is the main predictor - when the rating difference is (TODO) points or larger, the model always favors the higher rated player to win. However, when the rating difference is small, it switches over to the (todo) "white always wins" model due to white's first move advantage. Some alternative methods were explored (rating binning, and grouping by first three opening moves), but neither showed improvement over "white wins." I believe this was largely due to an insufficiently large dataset size - only about (todo, check) 5000 games had players with ratings close enough that the rating difference was not overpowering (todo, rephrase), and further subdividing these games along the average rating of the two players and their opening moves created very small sample sizes that held little predictive power. This is definitely an avenue for further research and investigation.
+
+In the end the hybrid model was able to predict games with an accuracy of (todo) on the test set, which is a very slight improvement over the (todo) given by predicting the higher rated player to win.
 
 ## Methods / Analysis:
 A methods/analysis section that explains the process and techniques used, including data cleaning, data exploration and visualization, any insights gained, and your modeling approach. At least two different models or algorithms must be used, with at least one being more advanced than linear or logistic regression for prediction problems.
 
 ### Preprocessing:
 
+(TODO: Talk about the data more)
+(TODO: Find synonyms for indicates)
+The LiChess dataset used for this project contains games between several thousand players of varying skill ratings, from less than 1000 (beginner) to over 2400 (grandmaster). Each row in the dataset is a record of a single game. `white_id`, `white_rating`, `black_id`, and `black_rating` indicate the player ID and rating for the player on the white and black side. `victory_status` shows how the match ended, and can be `resign`, `mate`, `outoftime`, or `draw`. The `rated` column is somewhat misleading - the players involved still have ratings, but it indicates whether the match is rated (each player's ratings will be updated to reflect the outcome of the match) or casual (the outcome does not affect the player rating). `opening_eco`, `opening_name`, and `opening_ply` refer to the ECO category of the opening sequence, an English language name for the sequence, and the number of moves it took to complete. The `winner` column was recoded to use 1 if the winner was white, and 0 if the winner was black. `moves` was also recoded from a space seperated single string to a list of strings. These recodings allowed for easier processing later on.
+
+Several metadata columns - `id`, `created_at`, `last_move_at`, `turns`, and `increment_code` - were removed. The first four provide unnecessary or redundant information, but `increment_code` is interesting because it indicates the time format of the game. For example, an increment code of `15+30` means that each player starts with a total of 15 minutes, and is granted 30 extra seconds each turn. The amount of time allotted certainly has an effect on the way that the game is played, but I ultimately decided to omit this column for the sake of simplicity.
+
+For this project, I focused only on rated games that had a decisive outcome. Games which ended in stalemates (`victory_status == "draw"`) or which were unrated (`rated == false`) were removed from the dataset. After trimming games which did not meet these criteria, a dataset of 15,436 games remained. `createDataPartition` was applied to this dataset, with `p = 0.1` and the response vector set to the `winner` column, creating a training set of 13,892 games and a holdout test set of 1,544 games, with the proportion of winners equally distributed across both datasets.
+
+A `players` dataframe was also created, with statistics for each individual player. The column names are shown below, and should be self-explanatory:
 ```
-> names(data)
- [1] "id"             "rated"          "created_at"     "last_move_at"   "turns"          "victory_status" "winner"         "increment_code" "white_id"       "white_rating"   "black_id"       "black_rating"  
-[13] "moves"          "opening_eco"    "opening_name"   "opening_ply"
-> nrow(data)
-[1] 15436
-> nrow(main_df)
-[1] 13892
-> nrow(final_holdout_test)
-[1] 1544
-> unique(data$victory_status)
-[1] "resign"    "mate"      "outoftime"
-> length(unique(c(data$white_id, data$black_id)))
-[1] 12757
-> max(unique(c(data$white_rating, data$black_rating)))
-[1] 2622
-> min(unique(c(data$white_rating, data$black_rating)))
-[1] 784
+> names(players)
+[1] "player_id"   "white_wins"  "black_wins"  "white_games" "black_games" "total_games" "white_wr"    "black_wr"    "overall_wr"
 ```
 
-* Data cleaning (no draws, rated games only, moves from string into list)
-* Players dataframe
-* Rating bins
-* N-length opening sequence bins
-* Opener ECO bins
-
-
+### Data Analysis
 The first thing I did was to compare the game outcomes with the player ratings. Lichess uses the Glicko 2 rating system, which starts players off with a rating of 1500, adjusting it as the players play more games and accumulate more wins and losses. Since it is a numerical representation of a player's skill level, it is, as one might expect, a very reliable predictor of the outcome of a match.
 
 <div style="display: flex; justify-content: space-between; width: 100%;">
