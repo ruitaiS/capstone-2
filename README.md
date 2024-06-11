@@ -72,12 +72,12 @@ For the most part, we will treat this first move advantage as a constant proport
 
 #### Opening Moves
 
-Next I wanted to check the effect of various opening plays on the final outcome of a match. Looking at the density plot, some openers are much more frequently used than others, and I wanted to know whether it was because they were more consistently successful in securing a win.
+A strong opener allows a player to establish board control and develop key pieces early on in the game; securing these initial advantages can significantly influence the final outcome of a match. Analysis of the density plot reveals that certain openings are used much more often than others, which raises the question of whether these openings are popular because they lead to a higher win rate.
 
 <img src="/chess/graphs/openers_count_density.png" align="center" alt="Density Plot of Instances of Each Opener"
 	title="Density Plot of Instances of Each Opener"/>
 
-Common Opening ECO Codes:
+The ECO code for an 
 ```
 opening_eco opener_wr count
          A00 0.4107383   745
