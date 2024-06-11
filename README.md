@@ -3,15 +3,12 @@
 ## Introduction:
 An introduction/overview/executive summary section that describes the dataset and variables, and summarizes the goal of the project and key steps that were performed.
 
-For me chess is one of those things that I wish I was good at, but which I also can't justify spending the amount of time needed to actually learn properly. I thought it would be fun for this project to apply a machine learning model to predict the outcome of a chess match based only on player data and their opening moves.
+The goal of this project to apply a machine learning model to predict the outcome of a chess match based only on player data and their opening moves.
 
-(TODO: maybe rewrite. Last sentence especially)
-The early game in chess has been studied extensively. In comparison to the seemingly countless directions a match might go in, there are only a finite number of opening moves and sequences for the players to take at the beginning of the game. I understand some broad principles, like controlling the center of the board, maintaining good pawn structure, or developing your pieces to set yourself up in advantageous positions later on in the match, but volumes have been written dedicated to the specific strengths and weaknesses of different opening moves. Even the advantage of white has been extensively analyzed.
+For me chess is one of those things that I wish I was good at, but which I also can't justify spending the amount of time needed to actually learn properly. I understand some broad principles, like controlling the center of the board, maintaining good pawn structure, or developing your pieces to set yourself up in advantageous positions later on in the match, but I admit I know very little about specific opening sequences or the relative strengths and weaknesses of various opening tactics. If you are well versed in chess knowledge, this project most likely will not tell you anything you don't already know. It is really more of a backdrop (TODO Is this even the right word) to apply some of the data science techniques I learned in this course than it is an attempt to derive any meaningful insights about chess itself.
 
 (TODO: Talk about the data more)
-The LiChess dataset used for this project contains several thousand players of varying skill ratings, from beginner to grandmaster. For this project, I focused only on games between rated players that had a decisive outcome (no draws).
-
-(TODO: Talk about test / train splitting, making sure players are in both datasets. Or maybe change that, idk)
+The LiChess dataset used for this project contains several thousand players of varying skill ratings, from beginner to grandmaster. For this project, I focused only on games between rated players (no unrated games) that had a decisive outcome (no draws). After trimming games which did not meet these criteria, a dataset of 15436 games remained. `createDataPartition` was applied to this dataset, with `p = 0.1` and the response vector set to the `winner` column, creating a training set of 13,892 games and a holdout test set of 1,544 games.
 
 The final model is a hybrid approach. The rating difference between two players is the main predictor - when the rating difference is (TODO) points or larger, the model always favors the higher rated player to win. However, when the rating difference is small, it switches over to the (todo) "white always wins" model due to white's first move advantage. Some alternative methods were explored (rating binning, and grouping by first three opening moves), but neither showed improvement over "white wins." I believe this was largely due to an insufficiently large dataset size - only about (todo, check) 5000 games had players with ratings close enough that the rating difference was not overpowering (todo, rephrase), and further subdividing these games along the average rating of the two players and their opening moves created very small sample sizes that held little predictive power. This is definitely an avenue for further research and investigation.
 
@@ -20,6 +17,10 @@ In the end the hybrid model was able to predict games with an accuracy of (todo)
 
 
 '''
+Stuff idk where it goes yet
+
+The early game in chess has been studied extensively. In comparison to the seemingly countless directions a match might go in, there are only a finite number of opening moves and sequences for the players to take at the beginning of the game.  but volumes have been written dedicated to the specific strengths and weaknesses of different opening moves. Even the advantage of white has been extensively analyzed.
+
 Below 1200: Novice or Beginner
 1200 - 1400: Beginner to Intermediate
 1400 - 1600: Intermediate
@@ -41,6 +42,10 @@ A methods/analysis section that explains the process and techniques used, includ
 [13] "moves"          "opening_eco"    "opening_name"   "opening_ply"
 > nrow(data)
 [1] 15436
+> nrow(main_df)
+[1] 13892
+> nrow(final_holdout_test)
+[1] 1544
 > unique(data$victory_status)
 [1] "resign"    "mate"      "outoftime"
 > length(unique(c(data$white_id, data$black_id)))
