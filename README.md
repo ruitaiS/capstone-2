@@ -3,14 +3,53 @@
 ## Introduction:
 An introduction/overview/executive summary section that describes the dataset and variables, and summarizes the goal of the project and key steps that were performed.
 
-The LiChess dataset contains approximately 20,000 (TODO: Check) matches from (TODO) (however many) players. 
+For me chess is one of those things that I wish I was good at, but which I also can't justify spending the amount of time needed to actually learn properly. I thought it would be fun for this project to apply a machine learning model to predict the outcome of a chess match based only on player data and their opening moves.
+
+(TODO: maybe rewrite. Last sentence especially)
+The early game in chess has been studied extensively. In comparison to the seemingly countless directions a match might go in, there are only a finite number of opening moves and sequences for the players to take at the beginning of the game. I understand some broad principles, like controlling the center of the board, maintaining good pawn structure, or developing your pieces to set yourself up in advantageous positions later on in the match, but volumes have been written dedicated to the specific strengths and weaknesses of different opening moves. Even the advantage of white has been extensively analyzed.
+
+(TODO: Talk about the data more)
+The LiChess dataset used for this project contains several thousand players of varying skill ratings, from beginner to grandmaster. For this project, I focused only on games between rated players that had a decisive outcome (no draws).
+
+(TODO: Talk about test / train splitting, making sure players are in both datasets. Or maybe change that, idk)
+
+The final model is a hybrid approach. The rating difference between two players is the main predictor - when the rating difference is (TODO) points or larger, the model always favors the higher rated player to win. However, when the rating difference is small, it switches over to the (todo) "white always wins" model due to white's first move advantage. Some alternative methods were explored (rating binning, and grouping by first three opening moves), but neither showed improvement over "white wins." I believe this was largely due to an insufficiently large dataset size - only about (todo, check) 5000 games had players with ratings close enough that the rating difference was not overpowering (todo, rephrase), and further subdividing these games along the average rating of the two players and their opening moves created very small sample sizes that held little predictive power. This is definitely an avenue for further research and investigation.
+
+In the end the hybrid model was able to predict games with an accuracy of (todo) on the test set, which is a very slight improvement over the (todo) given by predicting the higher rated player to win.
+
+
+
+'''
+Below 1200: Novice or Beginner
+1200 - 1400: Beginner to Intermediate
+1400 - 1600: Intermediate
+1600 - 1800: Intermediate to Advanced Beginner
+1800 - 2000: Advanced Beginner to Lower Intermediate
+2000 - 2200: Lower Intermediate to Intermediate
+2200 - 2400: Intermediate to Advanced
+2400 and above: Advanced to Expert
+'''
 
 ## Methods / Analysis:
 A methods/analysis section that explains the process and techniques used, including data cleaning, data exploration and visualization, any insights gained, and your modeling approach. At least two different models or algorithms must be used, with at least one being more advanced than linear or logistic regression for prediction problems.
 
 ### Preprocessing:
 
-
+```
+> names(data)
+ [1] "id"             "rated"          "created_at"     "last_move_at"   "turns"          "victory_status" "winner"         "increment_code" "white_id"       "white_rating"   "black_id"       "black_rating"  
+[13] "moves"          "opening_eco"    "opening_name"   "opening_ply"
+> nrow(data)
+[1] 15436
+> unique(data$victory_status)
+[1] "resign"    "mate"      "outoftime"
+> length(unique(c(data$white_id, data$black_id)))
+[1] 12757
+> max(unique(c(data$white_rating, data$black_rating)))
+[1] 2622
+> min(unique(c(data$white_rating, data$black_rating)))
+[1] 784
+```
 
 * Data cleaning (no draws, rated games only, moves from string into list)
 * Players dataframe
