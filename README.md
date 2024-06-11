@@ -70,7 +70,7 @@ The final model is a hybrid approach. The rating difference between two players 
 
 In the end the hybrid model was able to predict games with an accuracy of (todo) on the test set, which is a very slight improvement over the (todo) given by predicting the higher rated player to win.
 
-## Methods / Analysis:
+## Analysis:
 A methods/analysis section that explains the process and techniques used, including data cleaning, data exploration and visualization, any insights gained, and your modeling approach. At least two different models or algorithms must be used, with at least one being more advanced than linear or logistic regression for prediction problems.
 
 ### Preprocessing:
@@ -156,14 +156,18 @@ Additionally, [C41](https://en.wikipedia.org/wiki/Philidor_Defence), which has a
 
 Could black's low win rate using this defense stem from its popularity among newer players who might have just only begun to memorize some set openings, and who have yet to develop a very sophisticated playbook? These two counter-intuitive findings led me to reconsider my approach. I started with the goal of finding the most advantageous opening moves used by experienced players as a way to predict wins, but the data seems to suggest that irregular opening moves used by novice players are just as powerful, if not more powerful, predictors of losses.
 
-#### Player Rating
+## Model Development
 
-Finally I looked at player rating, which is undoubtedly the most obvious predictor of who will win a match. Lichess uses the Glicko 2 rating system, which starts players off with a rating of 1500, adjusting it as the players play more games and accumulate more wins and losses. Since it is a numerical representation of a player's skill level, it is, as one might expect, a very reliable predictor of the outcome of a match.
+## Player Rating
+
+Lichess uses the Glicko 2 rating system, which starts players off with a rating of 1500, adjusting it as the players play more games and accumulate more wins and losses. Since it is a numerical representation of a player's skill level, it is, as one might expect, a very reliable predictor of the outcome of a match.
 
 <div style="display: flex; justify-content: space-between; width: 100%;">
     <img src="/chess/graphs/white_vs_black_ratings.png" style="width: 45%;" alt="White vs. Black Rating" title="White vs. Black Rating"/>
     <img src="/chess/graphs/wr_by_rating_diff_filtered_regline.png" style="width: 45%;" alt="Rating Difference Vs. Win Rate" title="Rating Difference Vs. Win Rate"/>
 </div>
+
+
 
 ### Simple Algorithms
 
