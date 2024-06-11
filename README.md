@@ -8,6 +8,41 @@ TODO:
 
 ### Stuff idk where it goes yet
 
+
+Linear model for white's win rate as predicted by the rating difference
+
+```
+> summary(lm_model)
+
+Call:
+lm(formula = wr ~ rating_diff, data = plot_df)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.61550 -0.07892 -0.00039  0.08025  0.44467 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 5.174e-01  4.513e-03   114.7   <2e-16 ***
+rating_diff 9.707e-04  1.911e-05    50.8   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.1239 on 752 degrees of freedom
+Multiple R-squared:  0.7743,	Adjusted R-squared:  0.774 
+F-statistic:  2580 on 1 and 752 DF,  p-value: < 2.2e-16
+```
+
+
+---------
+Finally I looked at the number of moves taken during the match. I didn't expect for this to be a good predictor of game outcome, but I was intereseted to know whether more moves would increase the likelihood of certain win conditions (eg. resignations), or whether the player's ranking would be predictive of the length of a match. The charts are shown below:
+
+* Moves vs. victory status
+* average player ranking vs. number of moves
+* 
+
+----
+
 The early game in chess has been studied extensively. In comparison to the seemingly countless directions a match might go in, there are only a finite number of opening moves and sequences for the players to take at the beginning of the game.  but volumes have been written dedicated to the specific strengths and weaknesses of different opening moves. Even the advantage of white has been extensively analyzed.
 
 Below 1200: Novice or Beginner
@@ -129,39 +164,6 @@ Finally I looked at player rating, which is undoubtedly the most obvious predict
     <img src="/chess/graphs/white_vs_black_ratings.png" style="width: 45%;" alt="White vs. Black Rating" title="White vs. Black Rating"/>
     <img src="/chess/graphs/wr_by_rating_diff_filtered_regline.png" style="width: 45%;" alt="Rating Difference Vs. Win Rate" title="Rating Difference Vs. Win Rate"/>
 </div>
-
-
-Linear model for white's win rate as predicted by the rating difference
-
-```
-> summary(lm_model)
-
-Call:
-lm(formula = wr ~ rating_diff, data = plot_df)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.61550 -0.07892 -0.00039  0.08025  0.44467 
-
-Coefficients:
-             Estimate Std. Error t value Pr(>|t|)    
-(Intercept) 5.174e-01  4.513e-03   114.7   <2e-16 ***
-rating_diff 9.707e-04  1.911e-05    50.8   <2e-16 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-Residual standard error: 0.1239 on 752 degrees of freedom
-Multiple R-squared:  0.7743,	Adjusted R-squared:  0.774 
-F-statistic:  2580 on 1 and 752 DF,  p-value: < 2.2e-16
-```
-
-
----------
-Finally I looked at the number of moves taken during the match. I didn't expect for this to be a good predictor of game outcome, but I was intereseted to know whether more moves would increase the likelihood of certain win conditions (eg. resignations), or whether the player's ranking would be predictive of the length of a match. The charts are shown below:
-
-* Moves vs. victory status
-* average player ranking vs. number of moves
-* 
 
 ### Simple Algorithms
 
