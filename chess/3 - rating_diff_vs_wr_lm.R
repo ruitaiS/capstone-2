@@ -1,8 +1,4 @@
-# Set which dataset to use
-# Use main_df for all training data; train_df for train split only
-dataset <- main_df
-
-plot_df <- dataset %>%
+plot_df <- main_df %>%
   mutate(rating_diff = white_rating - black_rating) %>%
   select(rating_diff, winner) %>%
   group_by(rating_diff) %>%
@@ -31,7 +27,7 @@ print(plot)
 store_plot("wr_by_rating_diff_filtered_regline.png", plot, h = 6, w=6)
 
 # Linear Model Predicting WR as a function of the rating difference
-rating_lm_model <- lm(wr ~ rating_diff, data = plot_df)
-summary(rating_lm_model)
+#rating_lm_model <- lm(wr ~ rating_diff, data = plot_df)
+#summary(rating_lm_model)
 
-rm(dataset, plot)
+rm(main_df, plot)
