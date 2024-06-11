@@ -96,7 +96,7 @@ Let's take a closer look at what these ECO codes mean (from Chess Opening Theory
 
 > D00: 1.d4 d5 unusual lines
 
-It turns out these are actually unrelated, "uncommon" opening sequences. This reflects the fact that our dataset is from a free online chess service, and most players are beginners, with over 75% of them having played 2 games or fewer recorded on the service.
+It turns out these are actually unrelated, "uncommon" opening sequences. This reflects the fact that our dataset is from a free online chess service, and most players are beginners, with over 75% of them having 2 games or fewer recorded in our dataset.
 
 ```
 > summary(players$total_games)
@@ -123,7 +123,7 @@ Could black's low win rate using this defense stem from its popularity among new
 
 #### Player Rating
 
-Player rating is the most obvious predictor of the winner of a match. Lichess uses the Glicko 2 rating system, which starts players off with a rating of 1500, adjusting it as the players play more games and accumulate more wins and losses. Since it is a numerical representation of a player's skill level, it is, as one might expect, a very reliable predictor of the outcome of a match.
+Finally I looked at player rating, which is undoubtedly the most obvious predictor of who will win a match. Lichess uses the Glicko 2 rating system, which starts players off with a rating of 1500, adjusting it as the players play more games and accumulate more wins and losses. Since it is a numerical representation of a player's skill level, it is, as one might expect, a very reliable predictor of the outcome of a match.
 
 <div style="display: flex; justify-content: space-between; width: 100%;">
     <img src="/chess/graphs/white_vs_black_ratings.png" style="width: 45%;" alt="White vs. Black Rating" title="White vs. Black Rating"/>
