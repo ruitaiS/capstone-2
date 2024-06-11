@@ -37,7 +37,7 @@ Several metadata columns - `id`, `created_at`, `last_move_at`, `turns`, and `inc
 
 For this project, I focused only on rated games that had a decisive outcome. Games which ended in stalemates (`victory_status == "draw"`) or which were unrated (`rated == false`) were removed from the dataset. After trimming games which did not meet these criteria, a dataset of 15,436 games remained. `createDataPartition` was applied to this dataset, with `p = 0.1` and the response vector set to the `winner` column, creating a training set of 13,892 games and a holdout test set of 1,544 games, with the proportion of winners equally distributed across both datasets.
 
-A `players` dataframe was also created, with statistics for each individual player.
+A `players` dataframe was also created, with statistics for each individual player:
 * `player_id` - The player's in-game id
 * `white_wins`, `black_wins` - The number of games won on each side
 *  `white_games`, `black_games`, `total_games` - The number of games played on each side, as well as the total
