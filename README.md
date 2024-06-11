@@ -77,7 +77,7 @@ A strong opener allows a player to establish board control and develop key piece
 <img src="/chess/graphs/openers_count_density.png" align="center" alt="Density Plot of Instances of Each Opener"
 	title="Density Plot of Instances of Each Opener"/>
 
-The Encyclopedia of Chess Openings `opening_eco` uses the codes established by
+Each game in the dataset is tagged with an `opening_eco` code, which refers to the categorization system used by the Encyclopedia of Chess Openings to classify different opening sequences. `main_df` was aggregated along values in the `opening_eco` column to produce calculate the win rate and occurrence counts for each code. 
 
 ```
 opening_eco opener_wr count
@@ -89,19 +89,14 @@ opening_eco opener_wr count
          C20 0.4842520   508
 ```
 
-I was curious what these openers were that seemed so popular, so I did some research.
-
-From [Wikipedia](https://en.wikipedia.org/wiki/Irregular_chess_opening#Unusual_first_moves_by_White):
-> The vast majority of high-level chess games begin with either 1.e4, 1.d4, 1.Nf3, or 1.c4. Also seen occasionally are 1.g3, 1.b3, and 1.f4. Other opening moves by White, along with a few non-transposing lines beginning 1.g3, are classified under the code "A00" by the Encyclopaedia of Chess Openings and described as "uncommon" or "irregular". Although they are classified under a single code, these openings are unrelated to each other.
-
-From Chess Opening Theory - ECO Volumes [A](https://en.wikibooks.org/wiki/Chess_Opening_Theory/ECO_volume_A) [C](https://en.wikibooks.org/wiki/Chess_Opening_Theory/ECO_volume_C) and [D](https://en.wikibooks.org/wiki/Chess_Opening_Theory/ECO_volume_D) :
+Let's take a closer look at what these ECO codes mean (from Chess Opening Theory - ECO Volumes [A](https://en.wikibooks.org/wiki/Chess_Opening_Theory/ECO_volume_A) [C](https://en.wikibooks.org/wiki/Chess_Opening_Theory/ECO_volume_C) and [D](https://en.wikibooks.org/wiki/Chess_Opening_Theory/ECO_volume_D) :
 > A00: Uncommon Openings
 
 > C00: French Defence, unusual White second moves
 
 > D00: 1.d4 d5 unusual lines
 
-It turns out these are actually collections of unrelated, "unsual" opening sequences. This reflects the fact that our dataset is from a free online chess service, and most players are beginners, with over 75% of them having played 2 games or fewer recorded on the service.
+It turns out these are actually unrelated, "uncommon" opening sequences. This reflects the fact that our dataset is from a free online chess service, and most players are beginners, with over 75% of them having played 2 games or fewer recorded on the service.
 
 ```
 > summary(players$total_games)
@@ -109,30 +104,22 @@ It turns out these are actually collections of unrelated, "unsual" opening seque
   1.000   1.000   1.000   2.362   2.000  82.000 
 ```
 
-The high proportion of beginner players makes the machine learning task a little tricker - it seemed to me that the outcome of these games would be much more chaotic than games between experienced players, who might have a more reasoned approach, and I wondered if the opening moves held any predictive power at all, given that they were more likely than not chosen at random.
+The high proportion of beginner players seems to make the machine learning task a little tricker - I was concerned that the outcome of these games would be much more chaotic than games between experienced players, who might have a more reasoned approach, and I wondered if the opening moves held any predictive power at all, given that they were more likely than not chosen at random.
 
 <img src="/chess/graphs/wins_by_opener_top_25.png" align="center" alt="Win Comparison of the Top 25 Most Played Openers"
 	title="Win Comparison of the Top 25 Most Played Openers"/>
 
-It's interesting to note that A00, the collection of unconventional opening moves by white, has a very high win rate for black. White is generally favored to win in chess because of the [first move advantage](https://en.wikipedia.org/wiki/First-move_advantage_in_chess), and our dataset shows this:
+It is interesting to note that the collection of unconventional opening moves by white, A00, is not only the most popular, but is also has an incredibly high win rate for black. Given that white always moves first and can choose any opening they prefer, it's puzzling why many players opt for openers that often lead to losses. What is behind this trend?
 
-```
-> mean(main_df$winner)
-[1] 0.5220334
-```
+Additionally, [C41](https://en.wikipedia.org/wiki/Philidor_Defence), which has a very high win rate for white in our dataset, is actually considered a good defensive move for black.
 
-This got me thinking. I had initially approached this question from the perspective of finding the most advantageous opening moves used by experienced players as a way to predict wins, but the data seems to suggest that irregular opening moves used by novice players are just as powerful, if not more powerful, predictors of losses.
+<p align="center">
+  <img src="/chess/graphs/C41.png" alt="C41 - Philidor Defense" title="C41 - Philidor Defense"/>
+</p>
 
-<div style="text-align:center;">
-<img src="/chess/graphs/C41.png" align="center" alt="C41 - Philidor Defense" title="C41 - Philidor Defense"/>
-</div>
+> Today, the Philidor is known as a solid but passive choice for Black, and is seldom seen in top-level play except as an alternative... It is considered a good opening for amateur players who seek a defensive strategy that is simpler and easier to understand
 
-Interestingly, [C41](https://en.wikipedia.org/wiki/Philidor_Defence), which has a very high win rate for white in our dataset, is actually considered a good defensive move for black.
-
-> Today, the Philidor is known as a solid but passive choice for Black, and is seldom seen in top-level play except as an alternative to the heavily analysed openings that can ensue after the normal 2...Nc6. It is considered a good opening for amateur players who seek a defensive strategy that is simpler and easier to understand
-
-Maybe this is because it is favored by newer players who might have just only begun to memorize some set openings, and who have yet to develop a very sophisticated playbook, but I can really only speculate; I don't personally know enough to say.
-
+Could black's low win rate using this defense stem from its popularity among newer players who might have just only begun to memorize some set openings, and who have yet to develop a very sophisticated playbook? These two counter-intuitive findings led me to reconsider my approach. I started with the goal of finding the most advantageous opening moves used by experienced players as a way to predict wins, but the data seems to suggest that irregular opening moves used by novice players are just as powerful, if not more powerful, predictors of losses.
 
 #### Player Rating
 
@@ -170,7 +157,7 @@ F-statistic:  2580 on 1 and 752 DF,  p-value: < 2.2e-16
 
 
 ---------
-Finally I looked at the number of moves taken during the match. I didn't expect for this to be a good predictor of game outcome, but I was intereseted to know whether more moves would increase the likelihood of certain win conditions (eg. resignaions), or whether the player's ranking would be predictive of the length of a match. The charts are shown below:
+Finally I looked at the number of moves taken during the match. I didn't expect for this to be a good predictor of game outcome, but I was intereseted to know whether more moves would increase the likelihood of certain win conditions (eg. resignations), or whether the player's ranking would be predictive of the length of a match. The charts are shown below:
 
 * Moves vs. victory status
 * average player ranking vs. number of moves
