@@ -3,8 +3,14 @@
 ## Introduction:
 An introduction/overview/executive summary section that describes the dataset and variables, and summarizes the goal of the project and key steps that were performed.
 
+The LiChess dataset contains approximately 20,000 (TODO: Check) matches from (TODO) (however many) players. 
+
 ## Methods / Analysis:
 A methods/analysis section that explains the process and techniques used, including data cleaning, data exploration and visualization, any insights gained, and your modeling approach. At least two different models or algorithms must be used, with at least one being more advanced than linear or logistic regression for prediction problems.
+
+### Preprocessing:
+
+
 
 * Data cleaning (no draws, rated games only, moves from string into list)
 * Players dataframe
