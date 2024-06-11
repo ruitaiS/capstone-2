@@ -1,5 +1,11 @@
 # Chess Game Outcome Prediction:
 
+
+TODO:
+* Find synonyms for indicates
+* Read over intro section; talk about analysis more maybe?
+
+
 ### Stuff idk where it goes yet
 
 The early game in chess has been studied extensively. In comparison to the seemingly countless directions a match might go in, there are only a finite number of opening moves and sequences for the players to take at the beginning of the game.  but volumes have been written dedicated to the specific strengths and weaknesses of different opening moves. Even the advantage of white has been extensively analyzed.
@@ -12,6 +18,11 @@ Below 1200: Novice or Beginner
 2000 - 2200: Lower Intermediate to Intermediate
 2200 - 2400: Intermediate to Advanced
 2400 and above: Advanced to Expert
+
+unless otherwise specified (such as in the rating binning section), we will assume a constant skill distribution across players for every subset of the data, and so we model this advantage as a constant proportion centered on the mean across the dataset, attributing any deviation to random variance (especially pronounced for small sample sizes, as seen in the plot below)
+
+<img src="/chess/graphs/cutoff_subsetting2-white_wins.png" align="center" alt="Cutoff Subsetting"
+	title="Cutoff Subsetting"/>
 
 ## Introduction:
 An introduction/overview/executive summary section that describes the dataset and variables, and summarizes the goal of the project and key steps that were performed.
@@ -29,13 +40,11 @@ A methods/analysis section that explains the process and techniques used, includ
 
 ### Preprocessing:
 
-(TODO: Talk about the data more)
-(TODO: Find synonyms for indicates)
 The LiChess dataset used for this project contains games between several thousand players of varying skill ratings, from less than 1000 (beginner) to over 2400 (grandmaster). Each row in the dataset is a record of a single game. `white_id`, `white_rating`, `black_id`, and `black_rating` indicate the player ID and rating for the player on the white and black side. `victory_status` shows how the match ended, and can be `resign`, `mate`, `outoftime`, or `draw`. The `rated` column is somewhat misleading - the players involved still have ratings, but it indicates whether the match is rated (each player's ratings will be updated to reflect the outcome of the match) or casual (the outcome does not affect the player rating). `opening_eco`, `opening_name`, and `opening_ply` refer to the ECO category of the opening sequence, an English language name for the sequence, and the number of moves it took to complete. The `winner` column was recoded to use 1 if the winner was white, and 0 if the winner was black. `moves` was also recoded from a space seperated single string to a list of strings. These recodings allowed for easier processing later on.
 
 Several metadata columns - `id`, `created_at`, `last_move_at`, `turns`, and `increment_code` - were removed. The first four provide unnecessary or redundant information, but `increment_code` is interesting because it indicates the time format of the game. For example, an increment code of `15+30` means that each player starts with a total of 15 minutes, and is granted 30 extra seconds each turn. The amount of time allotted certainly has an effect on the way that the game is played, but I ultimately decided to omit this column for the sake of simplicity.
 
-For this project, I focused only on rated games that had a decisive outcome. Games which ended in stalemates (`victory_status == "draw"`) or which were unrated (`rated == false`) were removed from the dataset. After trimming games which did not meet these criteria, a dataset of 15,436 games remained. `createDataPartition` was applied to this dataset, with `p = 0.1` and the response vector set to the `winner` column, creating a training set of 13,892 games and a holdout test set of 1,544 games, with the proportion of winners equally distributed across both datasets.
+For this project, I focused only on rated games that had a decisive outcome. Games which ended in stalemates (`victory_status == "draw"`) or which were unrated (`rated == false`) were removed from the dataset. After trimming, a dataset of 15,436 games remained. `createDataPartition` was applied to this dataset, with `p = 0.1` and the response vector set to the `winner` column, creating a training set of 13,892 games and a holdout test set of 1,544 games, with the proportion of winners equally distributed across both datasets.
 
 A `players` dataframe was also created, with statistics for each individual player:
 * `player_id` - The player's in-game id
@@ -45,38 +54,23 @@ A `players` dataframe was also created, with statistics for each individual play
 
 ### Data Analysis
 
-The first thing I did was to compare the game outcomes with the player ratings. Lichess uses the Glicko 2 rating system, which starts players off with a rating of 1500, adjusting it as the players play more games and accumulate more wins and losses. Since it is a numerical representation of a player's skill level, it is, as one might expect, a very reliable predictor of the outcome of a match.
+#### First Move Advantage
 
-<div style="display: flex; justify-content: space-between; width: 100%;">
-    <img src="/chess/graphs/white_vs_black_ratings.png" style="width: 45%;" alt="White vs. Black Rating" title="White vs. Black Rating"/>
-    <img src="/chess/graphs/wr_by_rating_diff_filtered_regline.png" style="width: 45%;" alt="Rating Difference Vs. Win Rate" title="Rating Difference Vs. Win Rate"/>
-</div>
-
-
-Linear model for white's win rate as predicted by the rating difference
+It may be surprising to know that in chess, wins are not equally distributed between both sides. White always moves first, and there is quite a well documented [first move advantage](https://en.wikipedia.org/wiki/First-move_advantage_in_chess) in chess. We see this effet reflected in our training data, which shows that white wins approximately 52% of all games:
 
 ```
-> summary(lm_model)
-
-Call:
-lm(formula = wr ~ rating_diff, data = plot_df)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.61550 -0.07892 -0.00039  0.08025  0.44467 
-
-Coefficients:
-             Estimate Std. Error t value Pr(>|t|)    
-(Intercept) 5.174e-01  4.513e-03   114.7   <2e-16 ***
-rating_diff 9.707e-04  1.911e-05    50.8   <2e-16 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-Residual standard error: 0.1239 on 752 degrees of freedom
-Multiple R-squared:  0.7743,	Adjusted R-squared:  0.774 
-F-statistic:  2580 on 1 and 752 DF,  p-value: < 2.2e-16
+> mean(main_df$winner)
+[1] 0.522387
 ```
+The linked Wikipedia article also mentions that the first move advantage becomes more pronounced at higher skill levels, with white's win rate approaching 100% for games between top-level chess engines. We do not see this in our dataset, because our data is comprised of games between (presumably) human players, and because we don't have enough samples at each level of play to be able to discern a trend. In the graph below, the "Game Rating" is defined as the average rating of `white_rating` and `black_rating` for a game, and we can see no appreciable increase in white's win rate as the average rating between the two players increases:
 
+<img src="/chess/graphs/white_wr_by_game_rating.png" align="center" alt="White Win Rate by Game Rating"
+	title="White Win Rate by Game Rating"/>
+
+
+For the most part, we will treat this first move advantage as a constant proportion, rather than a function of the combined skill level of the two players.
+
+#### Opening Moves
 
 Next I wanted to check the effect of various opening plays on the final outcome of a match. Looking at the density plot, some openers are much more frequently used than others, and I wanted to know whether it was because they were more consistently successful in securing a win.
 
@@ -138,6 +132,43 @@ Interestingly, [C41](https://en.wikipedia.org/wiki/Philidor_Defence), which has 
 
 Maybe this is because it is favored by newer players who might have just only begun to memorize some set openings, and who have yet to develop a very sophisticated playbook, but I can really only speculate; I don't personally know enough to say.
 
+
+#### Player Rating
+
+Player rating is the most obvious predictor of the winner of a match. Lichess uses the Glicko 2 rating system, which starts players off with a rating of 1500, adjusting it as the players play more games and accumulate more wins and losses. Since it is a numerical representation of a player's skill level, it is, as one might expect, a very reliable predictor of the outcome of a match.
+
+<div style="display: flex; justify-content: space-between; width: 100%;">
+    <img src="/chess/graphs/white_vs_black_ratings.png" style="width: 45%;" alt="White vs. Black Rating" title="White vs. Black Rating"/>
+    <img src="/chess/graphs/wr_by_rating_diff_filtered_regline.png" style="width: 45%;" alt="Rating Difference Vs. Win Rate" title="Rating Difference Vs. Win Rate"/>
+</div>
+
+
+Linear model for white's win rate as predicted by the rating difference
+
+```
+> summary(lm_model)
+
+Call:
+lm(formula = wr ~ rating_diff, data = plot_df)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.61550 -0.07892 -0.00039  0.08025  0.44467 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 5.174e-01  4.513e-03   114.7   <2e-16 ***
+rating_diff 9.707e-04  1.911e-05    50.8   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.1239 on 752 degrees of freedom
+Multiple R-squared:  0.7743,	Adjusted R-squared:  0.774 
+F-statistic:  2580 on 1 and 752 DF,  p-value: < 2.2e-16
+```
+
+
+---------
 Finally I looked at the number of moves taken during the match. I didn't expect for this to be a good predictor of game outcome, but I was intereseted to know whether more moves would increase the likelihood of certain win conditions (eg. resignaions), or whether the player's ranking would be predictive of the length of a match. The charts are shown below:
 
 * Moves vs. victory status
@@ -153,15 +184,7 @@ Like with the movielens project, I started out with some very basic prediction m
 
 * Guessing the winner leads to around 50% correct rate
 
-* Guessing white as the winner every match yields around 52% correct rate. This is caused by white's first move advantage[first move advantage](https://en.wikipedia.org/wiki/First-move_advantage_in_chess)
- 
-> Since 1851, compiled statistics support this view; White consistently wins slightly more often than Black, usually achieving a winning percentage between 52 and 56 percent.[nb 1] White's advantage is less significant in games ... between lower-level players, and becomes greater as the level of play rises... As the standard of play rises, all the way up to top engine level, the number of decisive games approaches zero, and the proportion of White wins among those decisive games approaches 100%
-
-* Whites' first move advantage is more pronounced at higher skill levels, and less so at lower levels. For the most part, unless otherwise specified (such as in the rating binning section), we will assume a constant skill distribution across players for every subset of the data, and so we model this advantage as a constant proportion centered on the mean across the dataset, attributing any deviation to random variance (especially pronounced for small sample sizes, as seen in the plot below)
-
-<img src="/chess/graphs/cutoff_subsetting2-white_wins.png" align="center" alt="Cutoff Subsetting"
-	title="Cutoff Subsetting"/>
-
+* Guessing white as the winner every match yields around 52% correct rate. This is caused by white's first move advantage
  
 * Always guess higher rated player
 * 
