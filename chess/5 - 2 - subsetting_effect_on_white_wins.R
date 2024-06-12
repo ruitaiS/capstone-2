@@ -20,13 +20,13 @@ for (cutoff in seq(from = max(abs(main_df$white_rating - main_df$black_rating)),
 rm(cutoff, accuracy, filtered, predicted)
 
 # Comparison to Global White WR
-by_rating_acc <- calculate_accuracy(
+higher_rated_wins <- calculate_accuracy(
   ifelse(main_df$white_rating >= main_df$black_rating, 1, 0),
   main_df$winner)
 
 # Subsetting has negligible effect on white's win rate:
 plot <- ggplot(tuning_results_2_2, aes(x = cutoff)) +
-  geom_hline(yintercept = by_majority_acc, linetype = "dashed", color = "red") +
+  geom_hline(yintercept = white_always_wins, linetype = "dashed", color = "red") +
   geom_line(aes(y = guess_white_accuracy, color = "Predict White Wins")) +
   scale_color_manual(values = c("Predict White Wins" = "red"), guide = "none") +
   scale_x_reverse() +

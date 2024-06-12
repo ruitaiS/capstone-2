@@ -30,24 +30,24 @@ for (cutoff in seq(from = max(abs(main_df$white_rating - main_df$black_rating)),
 rm(cutoff, accuracy, filtered, predicted)
 
 # Comparison to Simpler Algorithms
-by_majority_acc <- calculate_accuracy(
-  rep(ifelse(mean(main_df$winner) >= 0.5, 1, 0), nrow(main_df)),
+white_always_wins <- calculate_accuracy(
+  rep(1, nrow(main_df)),
   main_df$winner)
-by_rating_acc <- calculate_accuracy(
+higher_rated_wins <- calculate_accuracy(
   ifelse(main_df$white_rating >= main_df$black_rating, 1, 0),
   main_df$winner)
 
 # First cutoff where higher player wins gives lower accuracy than guessing white for all
-threshold <- max(tuning_results_2[which(tuning_results_2$accuracy < by_majority_acc),]$cutoff)
+threshold <- max(tuning_results_2[which(tuning_results_2$accuracy < white_always_wins),]$cutoff)
 
 # More Information on Threshold:
-tuning_results_2[which(tuning_results_2$accuracy < by_majority_acc),]
+tuning_results_2[which(tuning_results_2$accuracy < white_always_wins),]
 
 plot <- ggplot(tuning_results_2, aes(x = cutoff)) +
   scale_x_reverse() +
   geom_rect(aes(xmin = -Inf, xmax = threshold, ymin = -Inf, ymax = Inf), fill = "gray", alpha = 0.2) +
-  geom_hline(yintercept = by_majority_acc, linetype = "dashed", color = "red") +
-  geom_hline(yintercept = by_rating_acc, linetype = "dashed", color = "blue") +
+  geom_hline(yintercept = white_always_wins, linetype = "dashed", color = "red") +
+  geom_hline(yintercept = higher_rated_wins, linetype = "dashed", color = "blue") +
   geom_line(aes(y = accuracy, color = "Predict Higher Rated Wins"), size = 1.5) +
   scale_color_manual(values = c("Predict Higher Rated Wins" = "blue"), guide = "none") +
   labs(x = "Maximum Rating Advantage", y = "") +
