@@ -175,11 +175,15 @@ Please note that the models in this project are rule based, created from direct 
 
 Randomly picking a winner results in an accuracy of about 50%. Picking white to win for every match yields a slightly improved 52% accuracy due to the first move advantage discussed previously. Always picking the higher rated player as the winner across the entire training set gives correct predictions about 65% of the time.
 
+<div align = "center">
+
 | Algorithm | Accuracy |
 | :-: | :-: |
 | Random Guess | 0.5014397 |
 | White Always Wins | 0.5223870 |
 | Higher Rated Wins | 0.6457673 |
+
+</div>
 
 "Higher rated wins" is a very good rule, but it can be improved. As we saw earlier, games with a larger rating gap have a higher proportion of wins in favor of the higher rated player - there is a directly linear relationship between the predictive power of the rule and the rating advantage. The graph below shows the effect on accuracy and dataset size if we only look at games where the rating difference is above some cutoff threshold:
 
