@@ -201,7 +201,9 @@ A high maximum allowed rating difference (the far left of the graph) will includ
 
 ---
 
-As an aside, the dashed red line is the accuracy of "white always wins" calculated for the entire dataset, not the subsetted data. But remember that we take white's first move advantage to be a constant, so assuming that there is a constant skill (not rating) distribution across both sides in every subset, this is a fair substitution. Below is a graph of the actual accuracy of "white always wins" on the same subsetted data as the chart above compared to the accuracy of "white always wins" when taken on the whole dataset. We see that it stays centered around the value calculated for the whole dataset, and we can attribute deviations from it to sampling variance, not to changes in white's advantage caused by restrictions in rating difference.
+#### A Side Note for Clarity
+
+As an aside, the dashed red line is the accuracy of "white always wins" calculated for the entire dataset, *not* the subsetted data. But remember that we take white's first move advantage to be a constant, and so, assuming that there is a constant skill (not rating) distribution across both sides in every subset, this should be a fair substitution. Below is a graph of the actual accuracy of "white always wins" on the same subsetted data as the chart above, shown as the solid red line, compared to the accuracy of "white always wins" when taken on the whole dataset, shown as the dashed red line. We see that it stays centered around the value calculated for the whole dataset, and we can attribute deviations from it to sampling variance, not to changes in white's advantage caused by restrictions in rating difference.
 
 <img src="/chess/graphs/cutoff_subsetting2-white_wins.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
