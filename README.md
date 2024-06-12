@@ -8,6 +8,12 @@ TODO:
 
 ### Stuff idk where it goes yet
 
+Increasing the minimum rating advantage also increases the likelihood the higher rated player will win. However, the dataset also becomes more restricted, because there are fewer games with larger rating differences. We can pick as high of an accuracy of we want, all the way up to 100% accuracy, but the tradeoff is that the algorithm will only be applicable to a correspondingly small subset of the data (note that once the accuracy reaches 100% it never goes back down - this is because we're essentially saying "For all games of this rating difference or greater, the outcome of every game can be predicted by guessing the higher rated player." Increasing the rating cutoff past here only leads to an unnecessary reduction in the dataset size).
+
+As the green line shows, the increase in accuracy never outstrips the decrease in dataset size. The Accuracy * Percentage product shows the proportion of the full dataset we're able to make correct predictions on. A cutoff that gives 100% accurate predictions but is only applicable to 50% of the dataset would be less valuable than a cutoff that gives 60% accurate predictions, but is applicable to the full dataset, because the former would only be able to make correct predictions for 50% of the data, while the latter would give correct predictions for 60%.
+
+---
+
 
 Linear model for white's win rate as predicted by the rating difference
 
@@ -160,56 +166,52 @@ Could black's low win rate using this defense stem from its popularity among new
 
 ## Player Rating
 
-Lichess uses the Glicko 2 rating system, which starts players off with a rating of 1500, adjusting it as the players play more games and accumulate more wins and losses. Since it is a numerical representation of a player's skill level, it is, as one might expect, a very reliable predictor of the outcome of a match.
+Lichess uses the Glicko 2 rating system, which starts players off with a rating of 1500, adjusting it as the players play more games and accumulate more wins and losses. Since it is a numerical representation of a player's skill level, it is, as one might expect, a very reliable predictor of the outcome of a match. (TODO: Left graph should show boundary line too)
 
 <div style="display: flex; justify-content: space-between; width: 100%;">
     <img src="/chess/graphs/white_vs_black_ratings.png" style="width: 45%;" alt="White vs. Black Rating" title="White vs. Black Rating"/>
     <img src="/chess/graphs/wr_by_rating_diff_filtered_regline.png" style="width: 45%;" alt="Rating Difference Vs. Win Rate" title="Rating Difference Vs. Win Rate"/>
 </div>
 
-The graph on the left plots the winner of each match by color, with the `white_rating` on the X axis and `black_rating` on the Y axis. There is a very distinct boundary, with matches above the Y = X line predominantly being in favor of black, and matches below the line
+The graph on the left plots the winner of each match by color, with `white_rating` on the X axis and `black_rating` on the Y axis. There is a very distinct boundary, with matches above the Y = X line predominantly being in favor of black, and matches below the line in favor of white. The graph on the right shows white's win rate plotted against the rating difference between the white and black players. Again, there is a very clear linear relationship between rating advantage and the proportion of games won.
 
 ## Model Development
 
-### Simple Algorithms
+(TODO: You say training a lot here)
+Please note that the models in this project are rule based, created from direct observations of general trends in the data, rather than being "trained" on it in the traditional sense. For this reason I chose not to seperate the main training data into training and validation sets, instead opting to use the entire training set as a whole. Smaller datasets lead to weaker generalizations, and would be more prone to sampling variance than using all the training data available. I believe this decision is justified, and I hope the details in the following sections will make the rationale behind it clear to the reader.
 
-* Used the entire training set for model development because these are rule based algorithms, rather than models which "learn" on the dataset. 
+Randomly picking a winner results in an accuracy of about 50%. Picking white to win for every match yields a slightly improved 52% accuracy due to the first move advantage discussed previously. Always picking the higher rated player as the winner across the entire training set gives correct predictions about 65% of the time.
 
-(TODO: Write better) 
-Like with the movielens project, I started out with some very basic prediction methods. Randomly picking a winner predictably results in an accuracy of (TODO), but what may be surprising is that picking white to win every game actually has a higher accuracy, at (TODO). One might assume that both sides are equally likely to win, but actually is not the case.
+| Algorithm | Accuracy |
+| :-: | :-: |
+| Random Guess | 0.5014397 |
+| White Always Wins | 0.5223870 |
+| Higher Rated Wins | 0.6457673 |
 
-
-
-* Guessing the winner leads to around 50% correct rate
-
-
-
-* Guessing white as the winner every match yields around 52% correct rate. This is caused by white's first move advantage
- 
-* Always guess higher rated player
-* 
-
-### Ensembling Based On Rating Difference Cutoffs
-
-Always predicting the higher rated player to win is a very good baseline algorithm, but we can improve on it. The graph below shows the effect on accuracy and dataset size if we confine the data to only rows where the rating difference is at a cutoff threshold or higher:
+"Higher rated wins" is a very good rule, but it can be improved. As we saw earlier, games with a larger rating gap have a higher proportion of wins in favor of the higher rated player - there is a directly linear relationship between the predictive power of the rule and the rating advantage. The graph below shows the effect on accuracy and dataset size if we only look at games where the rating difference is above some cutoff threshold:
 
 <img src="/chess/graphs/cutoff_subsetting1.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
 
-Increasing the minimum rating advantage also increases the likelihood the higher rated player will win. However, the dataset also becomes more restricted, because there are fewer games with larger rating differences. We can pick as high of an accuracy of we want, all the way up to 100% accuracy, but the tradeoff is that the algorithm will only be applicable to a correspondingly small subset of the data (note that once the accuracy reaches 100% it never goes back down - this is because we're essentially saying "For all games of this rating difference or greater, the outcome of every game can be predicted by guessing the higher rated player." Increasing the rating cutoff past here only leads to an unnecessary reduction in the dataset size).
+We see from the graph that we can arbitrarily increase the accuracy of "higher rated wins," all the way up to 100% accuracy, by simply adding the stipulation "as long as the rating difference is greater than X." The tradeoff is that the rule will only be applicable to a correspondingly small subset of the data, indicated by the red line. "The higher rated player will win, as long as there is more than an 800 point rating advantage" may be true close to 100% of the time, but the proportion of games with such a large rating difference is so small that the rule is effectively useless. As shown by the green line, there is no point at which the accuracy gain outweighs the reduction in dataset size. The Accuracy * Percentage product shows the proportion of the full dataset our rule is able to make correct predictions on, and it strictly decreases as the rating advantage requirement increases.
 
-As the green line shows, the increase in accuracy never outstrips the decrease in dataset size. The Accuracy * Percentage product shows the proportion of the full dataset we're able to make correct predictions on. A cutoff that gives 100% accurate predictions but is only applicable to 50% of the dataset would be less valuable than a cutoff that gives 60% accurate predictions, but is applicable to the full dataset, because the former would only be able to make correct predictions for 50% of the data, while the latter would give correct predictions for 60%.
-
-However, the green line is slightly misleading, because it assumes that whatever algorithm we use for the remainder of the data will always get the prediction wrong. It is more correctly interpreted as a lower bound for any ensemble algorithm we use with that cutoff - we already know that even if we always guess white for the remaining data, we should get slightly more than half of the remaining data correct.
-
-Before we get into that, let's examine the data from the opposite perspective. Below is a chart showing the accuracy of the algorithm when restricting the dataset to a maximum rating advantage cutoff. Here, instead of looking at how well the algorithm performs when the rating difference is large, we're looking at how poorly the algorithm performs when the rating difference is small. When the maximum allowed rating advantage is very large, we have close to the full dataset, so the performance at larger cutoffs approximates the performance when applied to the full dataset, shown as the dashed blue line. However, the more we restrict the maximum rating advantage, the worse the algorithm performs. For sets where there is very little difference in rating between the two players, the higher rated player is really only better on paper, and predicting the higher rated player to win in these cases is akin to picking a winner at random. 
-
-the model performs worse than guessing white wins every game, shown by the dashed red line (The actual performance of "white always wins" is not shown because white's win rate is assumed to be constant for all sets of games where skill between the two sides is equally distributed, as discussed earlier - TODO: Rephrase)
+However, the green line is slightly misleading, because it assumes that all predictions we make on the remainder of the data (eg. games where the rating difference is *less* than the threshold value) will be wrong. Even randomly guessing the outcome will be correct half of the time, so the green line is more correctly interpreted as a lower bound for our model's performance. Let's examine the data from the opposite perspective. Below is a chart showing the accuracy of the "higher rated wins" when restricting the dataset to a *maximum* rating advantage cutoff.
 
 <img src="/chess/graphs/cutoff_subsetting2.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
- * Any set with large maximum allowed rating differences (the far left of the graph) includes most of the dataset, so the model performs similarly as it would if we'd applied it to the entire dataset (the dashed blue line)
+
+A high maximum allowed rating difference (the far left of the graph) will include most games in the dataset, so the rule performs similarly as it would if we'd applied it to the entire dataset (the dashed blue line). But if we only look at games where there is a very small rating difference between the two players, 
+
  * For sets with very small maximum allowed differences (the gray portion of the graph), the difference in rating between the two players is largely an artifact of the way the rating system scores players, and the model performs similarly to picking a winner at random. At these minute rating differences, even the 2% first mover advantage (the dashed red line) overshadows the predictive power of the rating system.
+
+
+Here, instead of looking at how well the algorithm performs when the rating difference is large, we're looking at how poorly the algorithm performs when the rating difference is small. 
+
+However, the more we restrict the maximum rating advantage, the worse the algorithm performs. For sets where there is very little difference in rating between the two players, the higher rated player is really only better on paper, and predicting the higher rated player to win in these cases is akin to picking a winner at random. 
+
+the model performs worse than guessing white wins every game, shown by the dashed red line (The actual performance of "white always wins" is not shown because white's win rate is assumed to be constant for all sets of games where skill between the two sides is equally distributed, as discussed earlier - TODO: Rephrase)
+
+
 
   We can see that the cutoff at which this occurs is 55. When there is more than a 55 point rating advantage in either direction, we should strictly predict in favor of the higher rated player. However, there is a dataset of close to 5000 games for which this prediction method performs worse than guessing "white always wins", and therefore should be switched out for another algorithm
 ```
