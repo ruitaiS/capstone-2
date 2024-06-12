@@ -1,5 +1,7 @@
 # Chess Game Outcome Prediction:
 
+Note: The images do not render properly in the pdf. Please visit [this github repo](https://github.com/ruitaiS/capstone-2) to view the graphs.
+
 ## Introduction:
 
 The goal of this project to apply a machine learning model to predict the outcome of a chess match based only on player data and their opening moves. The starting data is a list of just over 20,000 matches from the online chess service Lichess. After trimming games without definitive wins and games not played for rating, the resulting dataset contained about 15,000 matches to develop our models on. Initial data analysis confirmed several well documented statistical peculiarities about chess, and also revealed some surprising results.
