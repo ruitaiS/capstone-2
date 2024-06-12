@@ -171,12 +171,16 @@ Lichess uses the Glicko 2 rating system, which starts players off with a rating 
 
 ### Simple Algorithms
 
+* Used the entire training set for model development because these are rule based algorithms, rather than models which "learn" on the dataset. 
+
 (TODO: Write better) 
 Like with the movielens project, I started out with some very basic prediction methods. Randomly picking a winner predictably results in an accuracy of (TODO), but what may be surprising is that picking white to win every game actually has a higher accuracy, at (TODO). One might assume that both sides are equally likely to win, but actually is not the case.
 
 
 
 * Guessing the winner leads to around 50% correct rate
+
+
 
 * Guessing white as the winner every match yields around 52% correct rate. This is caused by white's first move advantage
  
