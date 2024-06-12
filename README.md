@@ -185,7 +185,7 @@ Randomly picking a winner results in an accuracy of about 50%. Picking white to 
 
 </div>
 
-"Higher rated wins" is a very good rule, but it can be improved. As we saw earlier, games with a larger rating gap have a higher proportion of wins in favor of the higher rated player - there is a directly linear relationship between the predictive power of the rule and the rating advantage. The graph below shows the effect on accuracy and dataset size if we only look at games where the rating difference is above some cutoff threshold:
+"Higher rated wins" is a very good rule, but it can be improved. As we saw earlier, games with a larger rating gap have a higher proportion of wins in favor of the higher rated player. The graph below shows the effect on accuracy and dataset size if we only look at games where the rating difference is above some cutoff threshold:
 
 <img src="/chess/graphs/cutoff_subsetting1.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
