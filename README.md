@@ -5,67 +5,10 @@ TODO:
 * Find synonyms for indicates
 * Read over intro section; talk about analysis more maybe?
 
-
-### Stuff idk where it goes yet
-
-Increasing the minimum rating advantage also increases the likelihood the higher rated player will win. However, the dataset also becomes more restricted, because there are fewer games with larger rating differences. We can pick as high of an accuracy of we want, all the way up to 100% accuracy, but the tradeoff is that the algorithm will only be applicable to a correspondingly small subset of the data (note that once the accuracy reaches 100% it never goes back down - this is because we're essentially saying "For all games of this rating difference or greater, the outcome of every game can be predicted by guessing the higher rated player." Increasing the rating cutoff past here only leads to an unnecessary reduction in the dataset size).
-
-As the green line shows, the increase in accuracy never outstrips the decrease in dataset size. The Accuracy * Percentage product shows the proportion of the full dataset we're able to make correct predictions on. A cutoff that gives 100% accurate predictions but is only applicable to 50% of the dataset would be less valuable than a cutoff that gives 60% accurate predictions, but is applicable to the full dataset, because the former would only be able to make correct predictions for 50% of the data, while the latter would give correct predictions for 60%.
-
----
-
-
-Linear model for white's win rate as predicted by the rating difference
-
-```
-> summary(lm_model)
-
-Call:
-lm(formula = wr ~ rating_diff, data = plot_df)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.61550 -0.07892 -0.00039  0.08025  0.44467 
-
-Coefficients:
-             Estimate Std. Error t value Pr(>|t|)    
-(Intercept) 5.174e-01  4.513e-03   114.7   <2e-16 ***
-rating_diff 9.707e-04  1.911e-05    50.8   <2e-16 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-Residual standard error: 0.1239 on 752 degrees of freedom
-Multiple R-squared:  0.7743,	Adjusted R-squared:  0.774 
-F-statistic:  2580 on 1 and 752 DF,  p-value: < 2.2e-16
-```
-
-
----------
-Finally I looked at the number of moves taken during the match. I didn't expect for this to be a good predictor of game outcome, but I was intereseted to know whether more moves would increase the likelihood of certain win conditions (eg. resignations), or whether the player's ranking would be predictive of the length of a match. The charts are shown below:
-
-* Moves vs. victory status
-* average player ranking vs. number of moves
-* 
-
-----
-
-The early game in chess has been studied extensively. In comparison to the seemingly countless directions a match might go in, there are only a finite number of opening moves and sequences for the players to take at the beginning of the game.  but volumes have been written dedicated to the specific strengths and weaknesses of different opening moves. Even the advantage of white has been extensively analyzed.
-
-Below 1200: Novice or Beginner
-1200 - 1400: Beginner to Intermediate
-1400 - 1600: Intermediate
-1600 - 1800: Intermediate to Advanced Beginner
-1800 - 2000: Advanced Beginner to Lower Intermediate
-2000 - 2200: Lower Intermediate to Intermediate
-2200 - 2400: Intermediate to Advanced
-2400 and above: Advanced to Expert
-
 ## Introduction:
 An introduction/overview/executive summary section that describes the dataset and variables, and summarizes the goal of the project and key steps that were performed.
 
-The goal of this project to apply a machine learning model to predict the outcome of a chess match based only on player data and their opening moves. The final model is a hybrid approach. The rating difference between two players is the main predictor - when the rating difference is 60.5 points or larger, the model always favors the higher rated player to win. However, when the rating difference is small, it switches over to a prediction rule based on the opening sequence.
-
-Some alternative methods were explored (rating binning, and grouping by first three opening moves), but neither showed improvement over "white wins." I believe this was largely due to an insufficiently large dataset size - only about (todo, check) 5000 games had players with ratings close enough that the rating difference was not overpowering (todo, rephrase), and further subiding these games along the average rating of the two players and their opening moves created very small sample sizes that held little predictive power. This is definitely an avenue for further research and investigation.
+The goal of this project to apply a machine learning model to predict the outcome of a chess match based only on player data and their opening moves. The final model is a hybrid approach, with the rating difference between two players as the main predictor. When the rating difference is 60.5 points or larger, the model always favors the higher rated player to win. However, when the rating difference is small, it switches over to a prediction rule based on the opening sequence.
 
 In the end the hybrid model was able to predict games with an accuracy of (todo) on the test set, which is a very slight improvement over the (todo) given by predicting the higher rated player to win.
 
@@ -280,7 +223,7 @@ However, the final test set exhibits significantly different behavior than the t
 <img src="/chess/graphs/final_hybrid_2.png" align="center" alt="Final Hybrid Model"
 	title="Final Hybrid Model"/>
 
-I repeated with several seed values to create the holdout / training split. The above is the test repeated with `set.seed(100)`. ECO Winner consistently outperforms the other hybrid models in most cases, but the threshold value derived from the test set does not always fall within the optimum range. With different seed values, we do see regular occurrences where there is a window at which it is beneficial to switch prediction rules, but the position of this window shifts depending on the seed value.
+I tried with several seed values to create the holdout / training split. The above is the test repeated with `set.seed(100)`. ECO Winner consistently outperforms the other hybrid models in most cases, but the threshold value derived from the test set does not always fall within the optimum range. With different seed values, we do see regular occurrences where there is a window at which it is beneficial to switch prediction rules, but the position of this window shifts depending on the seed value.
 
 The shift is so significant that cross validation would not have helped to alleviate this issue. Even if we ran the test several times with different splits, we still need to average down to one threshold value, and there is no guarantee that it would fall within the window. I believe the only way to overcome this is with a larger dataset, where the position of the window is less sensitive to changes in seed value. This way we would have confidence that the range in which to switch prediction rules is consistent across the training and test sets, and we would have a better idea of where to set the threshold value. Additional testing with a larger dataset is necessary to verify this theory.
 
@@ -292,19 +235,10 @@ The rating system holds such high predictive power that for the majority of matc
 However, it became clear that the dataset size is a limiting factor in determining where the optimal switching window occurs. Depending on the seed value used for the test / train set split, the position of the window shifted dramatically, indicating that it was subject to significant sample variance due to small sample size. Further investigation with a larger dataset is warranted. LiChess has data for all the matches played on their service available for download, but these datasets are tens of gigabytes each for a single month's worth of matches, and therefore beyond the scope of this project.
 
 ## References:
-A references section that lists sources for datasets and/or other resources used, if applicable.
+https://www.kaggle.com/datasets/datasnaek/chess?resource=download
 
-### Grading Rubric (TODO: Remove)
-* 0 points: The report is either not uploaded or contains very minimal information AND/OR the report is not written in English AND/OR the report appears to violate the terms of the edX Honor Code.
-
-* 5 points: One or more required sections of the report are missing.
-
-* 10 points: The report includes all required sections, but the report is significantly difficult to follow or missing significant supporting detail in multiple sections.
-
-* 15 points: The report includes all required sections, but the report has flaws: it is difficult to follow and/or missing supporting detail in one section and/or has minor flaws in multiple sections and/or does not demonstrate mastery of the content.
-
-* 15 points: The report is otherwise fine, but the project is a variation on the MovieLens project.
-
-* 20 points: The report includes all required sections and is easy to follow, but with minor flaws in one section.
-
-* 25 points: The report includes all required sections, is easy to follow with good supporting detail throughout, and is insightful and innovative.
+https://en.wikipedia.org/wiki/First-move_advantage_in_chess
+https://en.wikipedia.org/wiki/Philidor_Defence
+https://en.wikibooks.org/wiki/Chess_Opening_Theory/ECO_volume_A
+https://en.wikibooks.org/wiki/Chess_Opening_Theory/ECO_volume_C
+https://en.wikibooks.org/wiki/Chess_Opening_Theory/ECO_volume_D
