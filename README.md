@@ -171,7 +171,11 @@ The graph on the left plots the winner of each match by color, with `white_ratin
 ## Model Development
 
 (TODO: You say training a lot here)
-Please note that the models in this project are rule based, created from direct observations of general trends in the data, rather than being "trained" on it in the traditional sense. For this reason I chose not to seperate the main training data into training and validation sets, instead opting to use the entire training set as a whole. Smaller datasets lead to weaker generalizations, and would be more prone to sampling variance than using all the training data available. I believe this decision is justified, and I hope the details in the following sections will make the rationale behind it clear to the reader.
+Please note that the models in this project are rule based, created from direct observations of general trends in the data, rather than being "trained" on it in the traditional sense. For this reason I chose not to seperate the main training data into training and validation sets, instead opting to use the entire training set as a whole.
+
+A) Smaller datasets lead to weaker generalizations, and would be more prone to sampling variance than using all the training data available. I believe this decision is justified, and I hope the details in the following sections will make the rationale behind it clear to the reader.
+
+B) Ultimately this was not a wise decision, for reasons discussed in the final results section.
 
 Randomly picking a winner results in an accuracy of about 50%. Picking white to win for every match yields a slightly improved 52% accuracy due to the first move advantage discussed previously. Always picking the higher rated player as the winner across the entire training set gives correct predictions about 65% of the time.
 
@@ -229,15 +233,66 @@ If we set the switch to occur at a very high cutoff (the left side of the top gr
 
 ---
 
+Finally let's try some better prediction rules than "white always wins" for the remaining subset. The graph below shows two alternatives. The first, `rating_bin_winner`, divides the dataset into rating bins. The bins start at 800, and increase in increments of 100 all the way up to 2400. Each match is placed into a rating bin, determined by the average rating of the two players. Instead of always guessing white for every match which falls below our rating advantage cutoff, we now look at which rating bin the match belongs to, and pick the side most likely to win for that bin. This shows a very slight improvement over `white_always_wins`, but not by much. As discussed earlier, the average rating of players in the match has little effect on whether white or black wins, so this improvement might be the result of slight overfitting to the training data.
+
 <img src="/chess/graphs/cutoff_subsetting_combined.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
+
+However, the `eco_winner` method does show a marked improvement over the two other methods. In an earlier section, we saw that some openings were very advantageous for white, and other openings advantageous for black. With this method, when one side's rating advantage falls below the cutoff, we look at the `opening_eco` code for the match, and we predict a winner based on which side is more likely to win given the opener that was used. This was the model which was picked going into the final analysis.
 
 
 ## Results:
 A results section that presents the modeling results and discusses the model performance.
 
+(TODO: Maybe broad overview of other methods used and their results)
+
+The model which was used for final testing on the holdout set was the hydrid model consisting of picking the higher rated player to win when the rating difference was greater than a threshold, and picking the majority winner of the ECO group when the rating difference was below the threshold.
+
+The final threshold value was decided as the average between the two values which gave the highest accuracy in the training set, 69 and 52.
+
+```
+> head(tuning_results_2[order(tuning_results_2$accuracy, decreasing = TRUE), ])
+    accuracy cutoff
+70 0.6601641     69
+53 0.6600921     52
+69 0.6599482     68
+54 0.6596602     53
+55 0.6595883     54
+71 0.6595883     70
+```
+
+The final results are tallied below. The Higher Rated Wins / ECO Wins Hybrid model performed in line with the other hybrid models on the test set, which all outperformed the "White Always Wins" static model. However, it performed suprisingly poorly when compared to the single rule "Higher Rated Always Wins" on the final test set, and in general exhibited worse performance against the other hybrid models than I expected.
+
+| Algorithm | Final Test Accuracy |
+| :-: | :-: |
+| White Always Wins | 0.5148964 |
+| Higher Rated Always Wins | 0.6729275 |
+| White Wins Hybrid | 0.6560881 |
+| Rating Bin Hybrid | 0.6573834 |
+| ECO Winner Hybrid | 0.6554404 |
+
+I had a suspicion that this might be due to my choice of cutoff threshold, so I plotted the cutoffs against the accuracy in the final model, shown on the graph below. The dashed vertical line indicates the threshold value used for the final test.
+
+<img src="/chess/graphs/final_hybrid.png.png" align="center" alt="Final Hybrid Model"
+	title="Final Hybrid Model"/>
+
+The graph reveals that ECO Winner Hybrid model actually does perform better than the other hybrid models for most cutoff values, and it's only towards the end that all the hybrid models compress together. That was a relief.
+
+However, the final test set exhibits significantly different behavior than the training set. In the training set we saw a window in which the accuracy of always predicting the higher rated player would dip below a certain threshold, at which point it became more beneficial to switch over to another prediction rule. In the final test set, there was virtually no threshold value at which it becomes better to switch out of picking the higher rated player, indicated by the dashed blue line. It is almost always better to just pick the higher rated player.
+
+<img src="/chess/graphs/final_hybrid_2.png.png" align="center" alt="Final Hybrid Model"
+	title="Final Hybrid Model"/>
+
+I repeated with several seed values to create the holdout / training split. The above is the test repeated with `set.seed(100)`. ECO Winner consistently outperforms the other hybrid models in most cases, but the threshold value derived from the test set does not always fall within the optimum range. With different seed values, we do see regular occurrences where there is a window at which it is beneficial to switch prediction rules, but the position of this window shifts depending on the seed value.
+
+The shift is so significant that cross validation would not have helped to alleviate this issue. Even if we ran the test several times with different splits, we still need to average down to one threshold value, and there is no guarantee that it would fall within the window. I believe the only way to overcome this is with a larger dataset, where the position of the window is less sensitive to changes in seed value. This way we would have confidence that the range in which to switch prediction rules is consistent across the training and test sets, and we would have a better idea of where to set the threshold value. Additional testing with a larger dataset is necessary to verify this theory.
+
 ## Conclusion:
 A conclusion section that gives a brief summary of the report, its potential impact, its limitations, and future work.
+
+The rating system holds such high predictive power that for the majority of matches, we don't need to look beyond which player has the higher rating. However, when the rating difference between two players is sufficiently small, the accuracy of simply guessing the higher rated player drops to around 50%, and we can make more accurate predictions by switching to an alternative method. Any method that gets more than half the predictions right on this subset would be an improvement. Three methods were tried in this project. The most basic was to guess that white will always win, motivated by the first mover advantage, which showed white winning slightly more than half of the time. The next was to predict the outcome based on the average rating of the two players in the match. This showed a minor improvement, but because our data analysis had indicated there was no discernible effect on the winning side as a function of the level of play, this improvement may be indicative of overfitting. The last method was to predict winners in this subset based on the effectiveness of their opening strategy, and this gave the most substantial improvement, resulting in a final accuracy of 0.6554404 on the holdout test set.
+
+However, it became clear that the dataset size is a limiting factor in determining where the optimal switching window occurs. Depending on the seed value used for the test / train set split, the position of the window shifted dramatically, indicating that it was subject to significant sample variance due to small sample size. Further investigation with a larger dataset is warranted. LiChess has data for all the matches played on their service available for download, but these datasets are tens of gigabytes each for a single month's worth of matches, and therefore beyond the scope of this project.
 
 ## References:
 A references section that lists sources for datasets and/or other resources used, if applicable.
