@@ -67,7 +67,7 @@ The goal of this project to apply a machine learning model to predict the outcom
 
 For me chess is one of those things that I wish I was good at, but which I also can't justify spending the amount of time needed to actually learn properly. I understand some broad principles, like controlling the center of the board, maintaining good pawn structure, or developing your pieces to set yourself up in advantageous positions later on in the match, but I admit I know very little about specific opening sequences or the relative strengths and weaknesses of various opening tactics. If you are well versed in chess knowledge, this project most likely will not tell you anything you don't already know. It is really more of a backdrop (TODO Is this even the right word) to apply some of the data science techniques I learned in this course than it is an attempt to derive any meaningful insights about chess itself.
 
-The final model is a hybrid approach. The rating difference between two players is the main predictor - when the rating difference is (TODO) points or larger, the model always favors the higher rated player to win. However, when the rating difference is small, it switches over to the (todo) "white always wins" model due to white's first move advantage. Some alternative methods were explored (rating binning, and grouping by first three opening moves), but neither showed improvement over "white wins." I believe this was largely due to an insufficiently large dataset size - only about (todo, check) 5000 games had players with ratings close enough that the rating difference was not overpowering (todo, rephrase), and further subdividing these games along the average rating of the two players and their opening moves created very small sample sizes that held little predictive power. This is definitely an avenue for further research and investigation.
+The final model is a hybrid approach. The rating difference between two players is the main predictor - when the rating difference is (TODO) points or larger, the model always favors the higher rated player to win. However, when the rating difference is small, it switches over to the (todo) "white always wins" model due to white's first move advantage. Some alternative methods were explored (rating binning, and grouping by first three opening moves), but neither showed improvement over "white wins." I believe this was largely due to an insufficiently large dataset size - only about (todo, check) 5000 games had players with ratings close enough that the rating difference was not overpowering (todo, rephrase), and further subiding these games along the average rating of the two players and their opening moves created very small sample sizes that held little predictive power. This is definitely an avenue for further research and investigation.
 
 In the end the hybrid model was able to predict games with an accuracy of (todo) on the test set, which is a very slight improvement over the (todo) given by predicting the higher rated player to win.
 
@@ -82,7 +82,7 @@ Several metadata columns - `id`, `created_at`, `last_move_at`, `turns`, and `inc
 
 For this project, I focused only on rated games that had a decisive outcome. Games which ended in stalemates (`victory_status == "draw"`) or which were unrated (`rated == false`) were removed from the dataset. After trimming, a dataset of 15,436 games remained. `createDataPartition` was applied to this dataset, with `p = 0.1` and the response vector set to the `winner` column, creating a training set of 13,892 games and a holdout test set of 1,544 games, with the proportion of winners equally distributed across both datasets.
 
-A `players` dataframe was also created, with statistics for each individual player:
+A `players` dataframe was also created, with statistics for each inidual player:
 * `player_id` - The player's in-game id
 * `white_wins`, `black_wins` - The number of games won on each side
 *  `white_games`, `black_games`, `total_games` - The number of games played on each side, as well as the total
@@ -263,6 +263,8 @@ The final threshold value was decided as the average between the two values whic
 
 The final results are tallied below. The Higher Rated Wins / ECO Wins Hybrid model performed in line with the other hybrid models on the test set, which all outperformed the "White Always Wins" static model. However, it performed suprisingly poorly when compared to the single rule "Higher Rated Always Wins" on the final test set, and in general exhibited worse performance against the other hybrid models than I expected.
 
+<div align = "center">
+
 | Algorithm | Final Test Accuracy |
 | :-: | :-: |
 | White Always Wins | 0.5148964 |
@@ -270,6 +272,8 @@ The final results are tallied below. The Higher Rated Wins / ECO Wins Hybrid mod
 | White Wins Hybrid | 0.6560881 |
 | Rating Bin Hybrid | 0.6573834 |
 | ECO Winner Hybrid | 0.6554404 |
+
+</div>
 
 I had a suspicion that this might be due to my choice of cutoff threshold, so I plotted the cutoffs against the accuracy in the final model, shown on the graph below. The dashed vertical line indicates the threshold value used for the final test.
 
