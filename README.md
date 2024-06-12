@@ -156,7 +156,7 @@ Additionally, [C41](https://en.wikipedia.org/wiki/Philidor_Defence), which has a
 
 Could black's low win rate using this defense stem from its popularity among newer players who might have just only begun to memorize some set openings, and who have yet to develop a very sophisticated playbook? These two counter-intuitive findings led me to reconsider my approach. I started with the goal of finding the most advantageous opening moves used by experienced players as a way to predict wins, but the data seems to suggest that irregular opening moves used by novice players are just as powerful, if not more powerful, predictors of losses.
 
-## Model Development
+
 
 ## Player Rating
 
@@ -167,7 +167,9 @@ Lichess uses the Glicko 2 rating system, which starts players off with a rating 
     <img src="/chess/graphs/wr_by_rating_diff_filtered_regline.png" style="width: 45%;" alt="Rating Difference Vs. Win Rate" title="Rating Difference Vs. Win Rate"/>
 </div>
 
+The graph on the left plots the winner of each match by color, with the `white_rating` on the X axis and `black_rating` on the Y axis. There is a very distinct boundary, with matches above the Y = X line predominantly being in favor of black, and matches below the line
 
+## Model Development
 
 ### Simple Algorithms
 
