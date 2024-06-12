@@ -1,7 +1,3 @@
-#> length(unique(main_df$opening_name))
-
-#> length(unique(main_df$opening_eco))
-
 # Unique Players Dataframe:
 players <- data.frame(player_id = unique(c(main_df$white_id, main_df$black_id)))
 

@@ -7,7 +7,6 @@ plot_df <- main_df %>%
 
 plot <- ggplot(plot_df, aes(x = avg_rating, y = white_wr)) +
   geom_point() +
-  #geom_line() +
   labs(title = "White Win Rate by Game Rating",
        x = "Game Rating",
        y = "White's Win Rate") +
@@ -18,5 +17,6 @@ plot <- ggplot(plot_df, aes(x = avg_rating, y = white_wr)) +
     axis.title = element_text(size = unit(15, "mm")),
     axis.text = element_text(size = unit(10, "mm"))
   )
-
-store_plot("white_wr_by_game_rating.png", plot)
+print(plot)
+#store_plot("white_wr_by_game_rating.png", plot)
+rm(plot, plot_df)

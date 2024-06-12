@@ -24,7 +24,8 @@ density_values <- density(openers$count)
 plot <- {plot(density_values, main = "Density Plot of Instances of Each Opener", xlab = "Count", ylab = "Density")
   polygon(density_values, col = "lightblue", border = "black")
 }
-store_plot("openers_count_density.png", plot)
+print(plot)
+#store_plot("openers_count_density.png", plot)
 
 # Bar Plot of Opener Winners -----------------------------------------------------------------------
 plot_df <- openers[, c("opening_eco", "white_wins", "black_wins")] %>% pivot_longer(cols = -opening_eco,names_to = "Winner")

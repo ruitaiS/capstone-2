@@ -87,15 +87,6 @@ results_final <- data.frame(accuracy = numeric(),
 for (cutoff in 0:cutoff_limit) {
   print(cutoff)
   
-  #predicted <- apply(final_holdout_test, 1, function(row){
-  #  if (abs(row[['white_rating']] - row[['black_rating']]) >= cutoff) {
-  #    return(ifelse(row[['white_rating']] >= row[['black_rating']], 1, 0))
-  #  } else {
-  #    return (eco_winner(row[['opening_eco']]))
-  #  }
-  #})
-  #accuracy <- calculate_accuracy(unlist(predicted), final_holdout_test$winner)
-  
   white_wins_hybrid <- calculate_accuracy(apply(final_holdout_test, 1, function(row){
     if (abs(row[['white_rating']] - row[['black_rating']]) >= cutoff) {
       return(ifelse(row[['white_rating']] >= row[['black_rating']], 1, 0))
@@ -119,8 +110,6 @@ for (cutoff in 0:cutoff_limit) {
       return (eco_winner(row[['opening_eco']]))
     }
   }), final_holdout_test$winner)
-  
-  
   
   results_final <- rbind(results_final, data.frame(
     accuracy = white_wins_hybrid,
@@ -155,13 +144,4 @@ plot <- ggplot(results_final, aes(x = cutoff, y = accuracy, color = source)) +
   )
 
 print(plot)
-store_plot("final_hybrid_2.png", plot)
-
-# ----
-test <- apply(final_holdout_test, 1, function(row){
-  if ((row[['white_rating']] - row[['black_rating']]) >= threshold) {
-    return (ifelse(row[['white_rating']] >= row[['black_rating']], "rating 1", "rating 0"))
-  } else {
-    return ("ww") #(1)
-  }
-})
+#store_plot("final_hybrid_2.png", plot)
