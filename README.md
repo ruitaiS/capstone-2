@@ -229,11 +229,8 @@ If we set the switch to occur at a very high cutoff (the left side of the top gr
 
 ---
 
-We will now focus on improving performance over "white always wins" in this subsetted group where the rating difference is 55 points or lower. If it substantially outperforms, we may need to go back and revisit the transition cutoff out of "higher rated wins" to the new model.
-
- * Rating Bins for the players in this group
- * opening eco win rate for each group
- * something akin to a decision tree I think. What rating bin are they in; based on that rating bin, and the opening moves, what is the most likely outcome. If we haven't seen any games with those opening moves, then pick white.
+<img src="/chess/graphs/cutoff_subsetting_combined.png" align="center" alt="Cutoff Subsetting"
+	title="Cutoff Subsetting"/>
 
 
 ## Results:
