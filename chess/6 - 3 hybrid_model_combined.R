@@ -10,7 +10,7 @@ higher_rated_wins <- calculate_accuracy(
 combined_results <- rbind(
   transform(tuning_results_1, source = "white_always_wins"),
   transform(tuning_results_2, source = "eco_winner"),
-  transform(tuning_results_3, source = "rating_bin_winner"),
+  transform(tuning_results_3, source = "rating_bin_winner")#,
   #transform(tuning_results_4, source = "")
 )
 
