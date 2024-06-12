@@ -32,8 +32,8 @@ eco_winner <- function(opening_eco) {
 }
 
 # ----------
-# Simple Models
-white_wins_accuracy <- calculate_accuracy(rep(1, nrow(final_holdout_test)), final_holdout_test$winner)
+# Static Models
+white_always_wins_accuracy <- calculate_accuracy(rep(1, nrow(final_holdout_test)), final_holdout_test$winner)
 
 higher_rated_wins_accuracy <- calculate_accuracy(
   ifelse(final_holdout_test$white_rating >= final_holdout_test$black_rating, 1, 0),
@@ -79,55 +79,83 @@ results <- data.frame(Algorithm = algorithm_names, Accuracy = accuracies)
 
 
 #-------
-results_0 <- data.frame(accuracy = numeric(),
-                            cutoff = numeric()
-)
-
-results_1 <- data.frame(accuracy = numeric(),
-                            cutoff = numeric()
-)
-
-results_2 <- data.frame(accuracy = numeric(),
-                            cutoff = numeric()
-)
-
 results_final <- data.frame(accuracy = numeric(),
-                               cutoff = numeric()
+                               cutoff = numeric(),
+                            source = character()
 )
 
 for (cutoff in 0:cutoff_limit) {
   print(cutoff)
-  predicted <- apply(final_holdout_test, 1, function(row){
+  
+  #predicted <- apply(final_holdout_test, 1, function(row){
+  #  if (abs(row[['white_rating']] - row[['black_rating']]) >= cutoff) {
+  #    return(ifelse(row[['white_rating']] >= row[['black_rating']], 1, 0))
+  #  } else {
+  #    return (eco_winner(row[['opening_eco']]))
+  #  }
+  #})
+  #accuracy <- calculate_accuracy(unlist(predicted), final_holdout_test$winner)
+  
+  white_wins_hybrid <- calculate_accuracy(apply(final_holdout_test, 1, function(row){
+    if (abs(row[['white_rating']] - row[['black_rating']]) >= cutoff) {
+      return(ifelse(row[['white_rating']] >= row[['black_rating']], 1, 0))
+    } else {
+      return (1)
+    }
+  }), final_holdout_test$winner)
+  
+  rating_bin_hybrid <- calculate_accuracy(apply(final_holdout_test, 1, function(row){
+    if (abs(row[['white_rating']] - row[['black_rating']]) >= cutoff) {
+      return(ifelse(row[['white_rating']] >= row[['black_rating']], 1, 0))
+    } else {
+      return (bin_winner(row[['white_rating']], row[['black_rating']]))
+    }
+  }), final_holdout_test$winner)
+  
+  eco_winner_hybrid <- calculate_accuracy(apply(final_holdout_test, 1, function(row){
     if (abs(row[['white_rating']] - row[['black_rating']]) >= cutoff) {
       return(ifelse(row[['white_rating']] >= row[['black_rating']], 1, 0))
     } else {
       return (eco_winner(row[['opening_eco']]))
     }
-  })
-  accuracy <- calculate_accuracy(unlist(predicted), final_holdout_test$winner)
+  }), final_holdout_test$winner)
+  
+  
+  
   results_final <- rbind(results_final, data.frame(
-    accuracy = accuracy,
-    cutoff = cutoff))
+    accuracy = white_wins_hybrid,
+    cutoff = cutoff,
+    source = "White Wins Hybrid"))
+  results_final <- rbind(results_final, data.frame(
+    accuracy = rating_bin_hybrid,
+    cutoff = cutoff,
+    source = "Rating Bin Hybrid"))
+  results_final <- rbind(results_final, data.frame(
+    accuracy = eco_winner_hybrid,
+    cutoff = cutoff,
+    source = "Eco Winner Hybrid"))
 }
 
 rm(accuracy, cutoff)
 
-plot <- ggplot(results_final, aes(x = cutoff, y = accuracy)) +
-  geom_line(color = "purple") +
+plot <- ggplot(results_final, aes(x = cutoff, y = accuracy, color = source)) +
+  geom_line() +
+  geom_hline(yintercept = white_always_wins_accuracy, linetype = "dashed", color = "red") +
+  geom_hline(yintercept = higher_rated_wins_accuracy, linetype = "dashed", color = "blue") +
   geom_vline(xintercept = threshold, linetype = "dashed") +
-  labs(x = "Cutoff", y = "Accuracy") +
-  ggtitle("Final Hybrid Model") +
+  labs(x = "Cutoff", y = "Accuracy", color = "Source") +
+  ggtitle("Hybrid Models Combined") +
   scale_x_reverse() +
-  theme_minimal()+
+  theme_minimal() +
   theme(
-    text = element_text(size = unit(2, "mm")),
+    text = element_text(size = unit(10, "mm")),
     plot.title = element_text(size = unit(20, "mm")),
     axis.title = element_text(size = unit(15, "mm")),
     axis.text = element_text(size = unit(10, "mm"))
   )
 
 print(plot)
-store_plot("final_hybrid.png", plot)
+store_plot("final_hybrid_2.png", plot)
 
 # ----
 test <- apply(final_holdout_test, 1, function(row){

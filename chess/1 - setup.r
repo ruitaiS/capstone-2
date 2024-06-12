@@ -49,7 +49,7 @@ data <- filter(data, rated == 'true')
 data <- select(data, subset = -c(id, turns, rated, created_at, last_move_at, increment_code))
 
 # Final hold-out test set will be 10% of data
-set.seed(1, sample.kind="Rounding") # if using R 3.6 or later
+set.seed(100, sample.kind="Rounding") # if using R 3.6 or later
 # set.seed(1) # if using R 3.5 or earlier
 holdout_index <- createDataPartition(y = data$winner, times = 1, p = 0.1, list = FALSE)
 
