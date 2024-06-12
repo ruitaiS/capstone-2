@@ -210,14 +210,14 @@ As an aside, the dashed red line is the accuracy of "white always wins" calculat
 
 ---
 
-We can see that the cutoff at which this occurs is 55. When there is more than a 55 point rating advantage in either direction, we should strictly predict in favor of the higher rated player. However, there is a dataset of close to 5000 games for which this prediction method performs worse than guessing "white always wins", and therefore should be switched out for another algorithm
+We can see from the output below that the transition occurs at around 55 points in rating difference. When there is more than a 55 point rating advantage in either direction, we can confidently predict in favor of the higher rated player. However, there are close to 5000 games for which this prediction method performs worse than guessing "white always wins", and for these games we should switch to a different rule.
 ```
 > tuning_results_2[which(tuning_results_2$accuracy < by_majority_acc),]
       accuracy dataset_size cutoff
 1236 0.5215301         4784     55
 ```
 
-Let's start with the simplistic "white always wins." The next graph shows the performance of an ensemble model which switches between "white always wins" and "higher rated player wins" depending on whether the rating difference is below a certain threshold.
+The following graph shows the performance of an hybrid model which switches between "white always wins" when the rating difference is below a certain threshold, and "higher rated player wins" when it is above the threshold.
 
 <img src="/chess/graphs/cutoff_subsetting3_standard.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
@@ -225,9 +225,9 @@ Let's start with the simplistic "white always wins." The next graph shows the pe
  <img src="/chess/graphs/cutoff_subsetting3_zoomed.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
 
- * For small rating difference cutoffs ( the right side, and zoomed in portion of the graph), this ensemble outperforms the "higher rated player wins" model.
- * For a rating difference cutoff of 0, the ensemble never switches out of "higher rated player wins" for any of the games and so it matches the output of that model (the dashed blue line).
- * For very large rating difference cutoffs (the left side of the graph), we're switching to "white always wins" for almost all the games, and so it matches the output of that model (the red dashed line)
+If we set the switch to occur at a very high cutoff (the left side of the graph), we're predominantly using the "white always wins" rule, because almost all games have a rating difference of that value or lower. In these cases, the hybrid model performs similarly to using "white always wins" on all the data. At the extreme right of the graph, when we set the switch to occur when the rating difference is 0, the model uses "higher rated wins" for all of the games, the accuracy matches the output of that rule exactly (the dashed blue line). But for the values shown on the second graph, the ensemble switches over to "white always wins" just as "higher rated wins" loses its predictive power, and when we set the switch to occur within this very small window, the ensemble model outperforms both the individual "higher rated wins" and "white always wins" rules.
+
+---
 
 We will now focus on improving performance over "white always wins" in this subsetted group where the rating difference is 55 points or lower. If it substantially outperforms, we may need to go back and revisit the transition cutoff out of "higher rated wins" to the new model.
 
