@@ -6,7 +6,6 @@ TODO:
 * Read over intro section; talk about analysis more maybe?
 
 ## Introduction:
-An introduction/overview/executive summary section that describes the dataset and variables, and summarizes the goal of the project and key steps that were performed.
 
 The goal of this project to apply a machine learning model to predict the outcome of a chess match based only on player data and their opening moves. The final model is a hybrid approach, with the rating difference between two players as the main predictor. When the rating difference is 60.5 points or larger, the model always favors the higher rated player to win. However, when the rating difference is small, it switches over to a prediction rule based on the opening sequence.
 
