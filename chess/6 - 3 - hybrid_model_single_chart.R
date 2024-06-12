@@ -1,17 +1,9 @@
-# Comparison to Simpler Algorithms
-white_always_wins <- calculate_accuracy(
-  rep(1, nrow(main_df)),
-  main_df$winner)
-higher_rated_wins <- calculate_accuracy(
-  ifelse(main_df$white_rating >= main_df$black_rating, 1, 0),
-  main_df$winner)
+# Combine all tuning_results dataframes into a single chart
 
-# Combine all tuning_results_x dataframes into a single dataframe
 combined_results <- rbind(
-  transform(tuning_results_1, source = "white_always_wins"),
-  transform(tuning_results_2, source = "eco_winner"),
-  transform(tuning_results_3, source = "rating_bin_winner")#,
-  #transform(tuning_results_4, source = "")
+  transform(tuning_results_0, source = "white_always_wins"),
+  transform(tuning_results_1, source = "rating_bin_winner"),
+  transform(tuning_results_2, source = "eco_winner")
 )
 
 # Plotting with combined data
@@ -20,7 +12,7 @@ plot <- ggplot(combined_results, aes(x = cutoff, y = accuracy, color = source)) 
   geom_hline(yintercept = white_always_wins, linetype = "dashed", color = "red") +
   geom_hline(yintercept = higher_rated_wins, linetype = "dashed", color = "blue") +
   labs(x = "Cutoff", y = "Accuracy", color = "Source") +
-  ggtitle("Cutoff Subset Ensemble Combined") +
+  ggtitle("Hybrid Models Combined") +
   scale_x_reverse() +
   theme_minimal() +
   theme(
@@ -30,7 +22,10 @@ plot <- ggplot(combined_results, aes(x = cutoff, y = accuracy, color = source)) 
     axis.text = element_text(size = unit(10, "mm"))
   )
 
-# Display the plot
 print(plot)
+#store_plot("cutoff_subsetting_combined.png", plot)
 
-store_plot("cutoff_subsetting_combined.png", plot)
+rm(plot, combined_results)
+
+# Determining Optimal Value to Set the Cutoff
+best_cutoffs <- head(tuning_results_2[order(tuning_results_2$accuracy, decreasing = TRUE), ])

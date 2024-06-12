@@ -1,46 +1,40 @@
-# Comparison to Simpler Algorithms
-white_always_wins <- calculate_accuracy(
-  rep(1, nrow(main_df)),
-  main_df$winner)
-higher_rated_wins <- calculate_accuracy(
-  ifelse(main_df$white_rating >= main_df$black_rating, 1, 0),
-  main_df$winner)
-
+# Basic Hybrid Model
 # Switch to white_always_wins
-tuning_results_1 <- data.frame(accuracy = numeric(),
+
+# Store Ratings Data Used Throughout Section 6
+ratings <- main_df %>% 
+  mutate(diff = abs(white_rating - black_rating)) %>%
+  select(diff, white_rating, black_rating, moves, opening_eco)
+# ------------------------------------------------------------------
+
+tuning_results_0 <- data.frame(accuracy = numeric(),
                              cutoff = numeric(),
                              stringsAsFactors = FALSE)
 
-# Tune Difference Cutoff By Checking Strength in Cutoff Group
-ratings <- main_df %>% 
-  mutate(diff = abs(white_rating - black_rating)) %>%
-  select(diff, white_rating, black_rating)
-
-for (cutoff in 0:max(tuning_results$cutoff)) { # Maintain Previous Scale
+for (cutoff in 0:cutoff_limit) { # Maintain previous Scale to plot all hybrid models together
 #for (cutoff in 0:60) { # Zoomed
   predicted <- apply(ratings, 1, function(row){
-    if (row['diff'] >= cutoff) {
-      return(ifelse(row['white_rating'] >= row['black_rating'], 1, 0))
+    if (row[['diff']] >= cutoff) {
+      return(ifelse(row[['white_rating']] >= row[['black_rating']], 1, 0))
     } else {
       return(1)
     }
   })
   
   accuracy <- calculate_accuracy(predicted, main_df$winner)
-  tuning_results_1 <- rbind(tuning_results_1, data.frame(
+  tuning_results_0 <- rbind(tuning_results_0, data.frame(
     accuracy = accuracy,
     cutoff = cutoff))
 }
 
-rm(accuracy, cutoff, filtered_set_predictions, remaining_set_predictions, filtered, remaining)
+rm(accuracy, cutoff)
 
-plot <- ggplot(tuning_results_1, aes(x = cutoff, y = accuracy)) +
-  #geom_point() +
-  geom_line(color = "purple") + # use size = 1.5 if standard scaling
-  #geom_hline(yintercept = white_aways_wins, linetype = "dashed", color = "red") + # Comment out for zoomed
+plot <- ggplot(tuning_results_0, aes(x = cutoff, y = accuracy)) +
+  geom_line(color = "purple", size = 1.5) + # remove size = 1.5 if zoomed
+  geom_hline(yintercept = white_always_wins, linetype = "dashed", color = "red") + # Comment out for zoomed
   geom_hline(yintercept = higher_rated_wins, linetype = "dashed", color = "blue") +
   labs(x = "Cutoff", y = "Accuracy") +
-  ggtitle("Cutoff Subset Ensemble Zoomed") +
+  ggtitle("Basic Hybrid Model") +
   scale_x_reverse() +
   theme_minimal()+
   theme(
@@ -51,4 +45,7 @@ plot <- ggplot(tuning_results_1, aes(x = cutoff, y = accuracy)) +
   )
 
 print(plot)
-store_plot("cutoff_subsetting3_zoomed.png", plot)
+#store_plot("cutoff_subsetting3.png", plot)
+
+# Cleanup
+rm(plot, predicted)

@@ -23,9 +23,13 @@ results <- rbind(results, data.frame(
     predicted,
     main_df$winner)))
 
-# Higher Rated Player, Skewed by Win Rate on That side
+# Store into Environment For Later ---------------------------
+white_always_wins <- calculate_accuracy(
+  rep(1, nrow(main_df)),
+  main_df$winner)
+higher_rated_wins <- calculate_accuracy(
+  ifelse(main_df$white_rating >= main_df$black_rating, 1, 0),
+  main_df$winner)
 
-# More likely side based on opening ECO
-
-# More likely side based on opening name
-
+# Cleanup
+rm(predicted, predictions)
