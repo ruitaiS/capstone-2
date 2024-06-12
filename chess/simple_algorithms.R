@@ -1,40 +1,27 @@
-# fold_index 0 means the full main_df is used
-
-observed <- test_df$winner
-
 # Random Guess
-fold_index <- 0
+set.seed(1)
 predicted <- sample(0:1, length(main_df$winner), replace = TRUE)
 results <- rbind(results, data.frame(
   Algorithm = "Random Guess",
   Accuracy = calculate_accuracy(
     predicted,
-    main_df$winner),
-  Fold = fold_index))
+    main_df$winner)))
 
-# Predict Based on Dataset's Majority Winner
-predicted <- rep(ifelse(mean(train_df$winner) >= 0.5, 1, 0), length(test_df$winner))
+# Predict White to Win Every Match
+predicted <- rep(1, length(main_df$winner))
 results <- rbind(results, data.frame(
-  Algorithm = "Majority Train Set Winner",
+  Algorithm = "White Always Wins",
   Accuracy = calculate_accuracy(
     predicted,
-    test_df$winner),
-  Fold = fold_index))
-
-#cf1 <- cf(predicted, observed)
-#print(cf1)
+    main_df$winner)))
 
 # Predict Higher Rated Player Wins:
-predicted <- ifelse(test_df$white_rating >= test_df$black_rating, 1, 0)
+predicted <- ifelse(main_df$white_rating >= main_df$black_rating, 1, 0)
 results <- rbind(results, data.frame(
   Algorithm = "Higher Rated Wins",
   Accuracy = calculate_accuracy(
     predicted,
-    test_df$winner),
-  Fold = fold_index))
-
-cf2 <- cf(predicted, observed)
-print(cf2)
+    main_df$winner)))
 
 # Higher Rated Player, Skewed by Win Rate on That side
 
