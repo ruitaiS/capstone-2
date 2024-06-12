@@ -60,11 +60,6 @@ Below 1200: Novice or Beginner
 2200 - 2400: Intermediate to Advanced
 2400 and above: Advanced to Expert
 
-unless otherwise specified (such as in the rating binning section), we will assume a constant skill distribution across players for every subset of the data, and so we model this advantage as a constant proportion centered on the mean across the dataset, attributing any deviation to random variance (especially pronounced for small sample sizes, as seen in the plot below)
-
-<img src="/chess/graphs/cutoff_subsetting2-white_wins.png" align="center" alt="Cutoff Subsetting"
-	title="Cutoff Subsetting"/>
-
 ## Introduction:
 An introduction/overview/executive summary section that describes the dataset and variables, and summarizes the goal of the project and key steps that were performed.
 
@@ -200,20 +195,16 @@ However, the green line is slightly misleading, because it assumes that all pred
 <img src="/chess/graphs/cutoff_subsetting2.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
 
-A high maximum allowed rating difference (the far left of the graph) will include most games in the dataset, so the rule performs similarly as it would if we'd applied it to the entire dataset (the dashed blue line). But if we only look at games where there is a very small rating difference between the two players, 
+A high maximum allowed rating difference (the far left of the graph) will include most games in the dataset, so the rule performs similarly as when it is applied to all the data (the dashed blue line). But the more we decrease the maximum rating advantage, the worse the algorithm performs. For sets where there is very little difference in rating between the two players, the higher rated player is really only better on paper, and predicting the higher rated player to win in these cases is akin to picking a winner at random. In the gray portion of the graph, the 2% first mover advantage means that even "white always wins" (the dashed red line) has higher accuracy than "higher rated wins."
 
- * For sets with very small maximum allowed differences (the gray portion of the graph), the difference in rating between the two players is largely an artifact of the way the rating system scores players, and the model performs similarly to picking a winner at random. At these minute rating differences, even the 2% first mover advantage (the dashed red line) overshadows the predictive power of the rating system.
+As an aside, the dashed red line is actually the accuracy of "white always wins" calculated for the entire dataset, not the subsetted data. But remember that we take white's first move advantage to be a constant, so assuming that there is a constant skill (not rating) distribution across both sides in every subset, this is a fair substitution. Below is a graph of the actual accuracy of "white always wins" on the same subsetted data as the chart above, and the accuracy of "white always wins" when taken on the whole dataset. We see that it stays centered around the value calculated for the whole dataset, and we can attribute deviations from it to sampling variance.
 
-
-Here, instead of looking at how well the algorithm performs when the rating difference is large, we're looking at how poorly the algorithm performs when the rating difference is small. 
-
-However, the more we restrict the maximum rating advantage, the worse the algorithm performs. For sets where there is very little difference in rating between the two players, the higher rated player is really only better on paper, and predicting the higher rated player to win in these cases is akin to picking a winner at random. 
-
-the model performs worse than guessing white wins every game, shown by the dashed red line (The actual performance of "white always wins" is not shown because white's win rate is assumed to be constant for all sets of games where skill between the two sides is equally distributed, as discussed earlier - TODO: Rephrase)
+<img src="/chess/graphs/cutoff_subsetting2-white_wins.png" align="center" alt="Cutoff Subsetting"
+	title="Cutoff Subsetting"/>
 
 
 
-  We can see that the cutoff at which this occurs is 55. When there is more than a 55 point rating advantage in either direction, we should strictly predict in favor of the higher rated player. However, there is a dataset of close to 5000 games for which this prediction method performs worse than guessing "white always wins", and therefore should be switched out for another algorithm
+We can see that the cutoff at which this occurs is 55. When there is more than a 55 point rating advantage in either direction, we should strictly predict in favor of the higher rated player. However, there is a dataset of close to 5000 games for which this prediction method performs worse than guessing "white always wins", and therefore should be switched out for another algorithm
 ```
 > tuning_results_2[which(tuning_results_2$accuracy < by_majority_acc),]
       accuracy dataset_size cutoff
