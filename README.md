@@ -277,14 +277,14 @@ The final results are tallied below. The Higher Rated Wins / ECO Wins Hybrid mod
 
 I had a suspicion that this might be due to my choice of cutoff threshold, so I plotted the cutoffs against the accuracy in the final model, shown on the graph below. The dashed vertical line indicates the threshold value used for the final test.
 
-<img src="/chess/graphs/final_hybrid.png.png" align="center" alt="Final Hybrid Model"
+<img src="/chess/graphs/final_hybrid.png" align="center" alt="Final Hybrid Model"
 	title="Final Hybrid Model"/>
 
 The graph reveals that ECO Winner Hybrid model actually does perform better than the other hybrid models for most cutoff values, and it's only towards the end that all the hybrid models compress together. That was a relief.
 
 However, the final test set exhibits significantly different behavior than the training set. In the training set we saw a window in which the accuracy of always predicting the higher rated player would dip below a certain threshold, at which point it became more beneficial to switch over to another prediction rule. In the final test set, there was virtually no threshold value at which it becomes better to switch out of picking the higher rated player, indicated by the dashed blue line. It is almost always better to just pick the higher rated player.
 
-<img src="/chess/graphs/final_hybrid_2.png.png" align="center" alt="Final Hybrid Model"
+<img src="/chess/graphs/final_hybrid_2.png" align="center" alt="Final Hybrid Model"
 	title="Final Hybrid Model"/>
 
 I repeated with several seed values to create the holdout / training split. The above is the test repeated with `set.seed(100)`. ECO Winner consistently outperforms the other hybrid models in most cases, but the threshold value derived from the test set does not always fall within the optimum range. With different seed values, we do see regular occurrences where there is a window at which it is beneficial to switch prediction rules, but the position of this window shifts depending on the seed value.
