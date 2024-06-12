@@ -199,12 +199,14 @@ However, the green line is slightly misleading, because it assumes that all pred
 
 A high maximum allowed rating difference (the far left of the graph) will include most games in the dataset, so the rule performs similarly as when it is applied to all the data (the dashed blue line). But the more we decrease the maximum rating advantage, the worse the algorithm performs. For sets where there is very little difference in rating between the two players, the higher rated player is really only better on paper, and predicting the higher rated player to win in these cases is akin to picking a winner at random. In the gray portion of the graph, the 2% first mover advantage means that even "white always wins" (the dashed red line) has higher accuracy than "higher rated wins."
 
+---
+
 As an aside, the dashed red line is the accuracy of "white always wins" calculated for the entire dataset, not the subsetted data. But remember that we take white's first move advantage to be a constant, so assuming that there is a constant skill (not rating) distribution across both sides in every subset, this is a fair substitution. Below is a graph of the actual accuracy of "white always wins" on the same subsetted data as the chart above compared to the accuracy of "white always wins" when taken on the whole dataset. We see that it stays centered around the value calculated for the whole dataset, and we can attribute deviations from it to sampling variance, not to changes in white's advantage caused by restrictions in rating difference.
 
 <img src="/chess/graphs/cutoff_subsetting2-white_wins.png" align="center" alt="Cutoff Subsetting"
 	title="Cutoff Subsetting"/>
 
-
+---
 
 We can see that the cutoff at which this occurs is 55. When there is more than a 55 point rating advantage in either direction, we should strictly predict in favor of the higher rated player. However, there is a dataset of close to 5000 games for which this prediction method performs worse than guessing "white always wins", and therefore should be switched out for another algorithm
 ```
