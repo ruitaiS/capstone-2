@@ -9,7 +9,6 @@ The predictive power of the rating system cannot be ignored, and is a very robus
 Each of these alternate prediction rules were tested in conjunction with the "higher rated player wins" rule, and a cutoff threshold determined at about 60 points in rating difference. When the rating difference is 60 points or greater, the model will predict based on which player is rated better. But when the rating difference between the two players is within this range, the model switches over to an alternative rule. Basing the outcome of these matches on the opening ECO code proved to be the most effective, and a hybrid approach combining these two methods yielded an accuracy of 0.6554404 on the holdout test set.
 
 ## Analysis:
-A methods/analysis section that explains the process and techniques used, including data cleaning, data exploration and visualization, any insights gained, and your modeling approach. At least two different models or algorithms must be used, with at least one being more advanced than linear or logistic regression for prediction problems.
 
 ### Preprocessing:
 
@@ -174,9 +173,6 @@ However, the `eco_winner` method does show a marked improvement over the two oth
 
 
 ## Results:
-A results section that presents the modeling results and discusses the model performance.
-
-(TODO: Maybe broad overview of other methods used and their results)
 
 The model which was used for final testing on the holdout set was the hydrid model consisting of picking the higher rated player to win when the rating difference was greater than a threshold, and picking the majority winner of the ECO group when the rating difference was below the threshold.
 
@@ -224,7 +220,6 @@ I tried with several seed values to create the holdout / training split. The abo
 The shift is so significant that cross validation would not have helped to alleviate this issue. Even if we ran the test several times with different splits, we still need to average down to one threshold value, and there is no guarantee that it would fall within the window. I believe the only way to overcome this is with a larger dataset, where the position of the window is less sensitive to changes in seed value. This way we would have confidence that the range in which to switch prediction rules is consistent across the training and test sets, and we would have a better idea of where to set the threshold value. Additional testing with a larger dataset is necessary to verify this theory.
 
 ## Conclusion:
-A conclusion section that gives a brief summary of the report, its potential impact, its limitations, and future work.
 
 The rating system holds such high predictive power that for the majority of matches, we don't need to look beyond which player has the higher rating. However, when the rating difference between two players is sufficiently small, the accuracy of simply guessing the higher rated player drops to around 50%, and we can make more accurate predictions by switching to an alternative method. Any method that gets more than half the predictions right on this subset would be an improvement. Three methods were tried in this project. The most basic was to guess that white will always win, motivated by the first mover advantage, which showed white winning slightly more than half of the time. The next was to predict the outcome based on the average rating of the two players in the match. This showed a minor improvement, but because our data analysis had indicated there was no discernible effect on the winning side as a function of the level of play, this improvement may be indicative of overfitting. The last method was to predict winners in this subset based on the effectiveness of their opening strategy, and this gave the most substantial improvement, resulting in a final accuracy of 0.6554404 on the holdout test set.
 
