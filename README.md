@@ -63,11 +63,9 @@ Below 1200: Novice or Beginner
 ## Introduction:
 An introduction/overview/executive summary section that describes the dataset and variables, and summarizes the goal of the project and key steps that were performed.
 
-The goal of this project to apply a machine learning model to predict the outcome of a chess match based only on player data and their opening moves.
+The goal of this project to apply a machine learning model to predict the outcome of a chess match based only on player data and their opening moves. The final model is a hybrid approach. The rating difference between two players is the main predictor - when the rating difference is 60.5 points or larger, the model always favors the higher rated player to win. However, when the rating difference is small, it switches over to a prediction rule based on the opening sequence.
 
-For me chess is one of those things that I wish I was good at, but which I also can't justify spending the amount of time needed to actually learn properly. I understand some broad principles, like controlling the center of the board, maintaining good pawn structure, or developing your pieces to set yourself up in advantageous positions later on in the match, but I admit I know very little about specific opening sequences or the relative strengths and weaknesses of various opening tactics. If you are well versed in chess knowledge, this project most likely will not tell you anything you don't already know. It is really more of a backdrop (TODO Is this even the right word) to apply some of the data science techniques I learned in this course than it is an attempt to derive any meaningful insights about chess itself.
-
-The final model is a hybrid approach. The rating difference between two players is the main predictor - when the rating difference is (TODO) points or larger, the model always favors the higher rated player to win. However, when the rating difference is small, it switches over to the (todo) "white always wins" model due to white's first move advantage. Some alternative methods were explored (rating binning, and grouping by first three opening moves), but neither showed improvement over "white wins." I believe this was largely due to an insufficiently large dataset size - only about (todo, check) 5000 games had players with ratings close enough that the rating difference was not overpowering (todo, rephrase), and further subdividing these games along the average rating of the two players and their opening moves created very small sample sizes that held little predictive power. This is definitely an avenue for further research and investigation.
+Some alternative methods were explored (rating binning, and grouping by first three opening moves), but neither showed improvement over "white wins." I believe this was largely due to an insufficiently large dataset size - only about (todo, check) 5000 games had players with ratings close enough that the rating difference was not overpowering (todo, rephrase), and further subiding these games along the average rating of the two players and their opening moves created very small sample sizes that held little predictive power. This is definitely an avenue for further research and investigation.
 
 In the end the hybrid model was able to predict games with an accuracy of (todo) on the test set, which is a very slight improvement over the (todo) given by predicting the higher rated player to win.
 
@@ -82,7 +80,7 @@ Several metadata columns - `id`, `created_at`, `last_move_at`, `turns`, and `inc
 
 For this project, I focused only on rated games that had a decisive outcome. Games which ended in stalemates (`victory_status == "draw"`) or which were unrated (`rated == false`) were removed from the dataset. After trimming, a dataset of 15,436 games remained. `createDataPartition` was applied to this dataset, with `p = 0.1` and the response vector set to the `winner` column, creating a training set of 13,892 games and a holdout test set of 1,544 games, with the proportion of winners equally distributed across both datasets.
 
-A `players` dataframe was also created, with statistics for each individual player:
+A `players` dataframe was also created, with statistics for each inidual player:
 * `player_id` - The player's in-game id
 * `white_wins`, `black_wins` - The number of games won on each side
 *  `white_games`, `black_games`, `total_games` - The number of games played on each side, as well as the total
@@ -170,12 +168,7 @@ The graph on the left plots the winner of each match by color, with `white_ratin
 
 ## Model Development
 
-(TODO: You say training a lot here)
-Please note that the models in this project are rule based, created from direct observations of general trends in the data, rather than being "trained" on it in the traditional sense. For this reason I chose not to seperate the main training data into training and validation sets, instead opting to use the entire training set as a whole.
-
-A) Smaller datasets lead to weaker generalizations, and would be more prone to sampling variance than using all the training data available. I believe this decision is justified, and I hope the details in the following sections will make the rationale behind it clear to the reader.
-
-B) Ultimately this was not a wise decision, for reasons discussed in the final results section.
+Please note that the models in this project are rule based, created from direct observations of general trends in the data, rather than being "trained" on it in the traditional sense. For this reason I chose not to seperate the main training data into training and validation sets, instead opting to use the entire training set as a whole. Smaller datasets lead to weaker generalizations, and would be more prone to sampling variance than using all the training data available. I believe this decision was justified, and I hope the details in the following sections will make the rationale behind it clear to the reader.
 
 Randomly picking a winner results in an accuracy of about 50%. Picking white to win for every match yields a slightly improved 52% accuracy due to the first move advantage discussed previously. Always picking the higher rated player as the winner across the entire training set gives correct predictions about 65% of the time.
 
@@ -263,6 +256,8 @@ The final threshold value was decided as the average between the two values whic
 
 The final results are tallied below. The Higher Rated Wins / ECO Wins Hybrid model performed in line with the other hybrid models on the test set, which all outperformed the "White Always Wins" static model. However, it performed suprisingly poorly when compared to the single rule "Higher Rated Always Wins" on the final test set, and in general exhibited worse performance against the other hybrid models than I expected.
 
+<div align = "center">
+
 | Algorithm | Final Test Accuracy |
 | :-: | :-: |
 | White Always Wins | 0.5148964 |
@@ -271,16 +266,18 @@ The final results are tallied below. The Higher Rated Wins / ECO Wins Hybrid mod
 | Rating Bin Hybrid | 0.6573834 |
 | ECO Winner Hybrid | 0.6554404 |
 
+</div>
+
 I had a suspicion that this might be due to my choice of cutoff threshold, so I plotted the cutoffs against the accuracy in the final model, shown on the graph below. The dashed vertical line indicates the threshold value used for the final test.
 
-<img src="/chess/graphs/final_hybrid.png.png" align="center" alt="Final Hybrid Model"
+<img src="/chess/graphs/final_hybrid.png" align="center" alt="Final Hybrid Model"
 	title="Final Hybrid Model"/>
 
 The graph reveals that ECO Winner Hybrid model actually does perform better than the other hybrid models for most cutoff values, and it's only towards the end that all the hybrid models compress together. That was a relief.
 
 However, the final test set exhibits significantly different behavior than the training set. In the training set we saw a window in which the accuracy of always predicting the higher rated player would dip below a certain threshold, at which point it became more beneficial to switch over to another prediction rule. In the final test set, there was virtually no threshold value at which it becomes better to switch out of picking the higher rated player, indicated by the dashed blue line. It is almost always better to just pick the higher rated player.
 
-<img src="/chess/graphs/final_hybrid_2.png.png" align="center" alt="Final Hybrid Model"
+<img src="/chess/graphs/final_hybrid_2.png" align="center" alt="Final Hybrid Model"
 	title="Final Hybrid Model"/>
 
 I repeated with several seed values to create the holdout / training split. The above is the test repeated with `set.seed(100)`. ECO Winner consistently outperforms the other hybrid models in most cases, but the threshold value derived from the test set does not always fall within the optimum range. With different seed values, we do see regular occurrences where there is a window at which it is beneficial to switch prediction rules, but the position of this window shifts depending on the seed value.
